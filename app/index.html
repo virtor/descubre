@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="descubre" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="descubre" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="descubre" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="descubre" class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ayuntamiento de Zaragoza. Descubre la ciudad</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="app.css">
+    <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+
+<body>
+    <header class="app-bar promote-layer">
+        <button class="menu"><img src="img/hamburger.png"></button>
+        <h1 class="logo">Ayuntamiento de Zaragoza <small>Descubre la ciudad</small></h1>
+        
+    </header>
+    <nav class="navdrawer-container promote-layer" role="navigation">
+      <ul>
+        <li data-match-route="/?(navbar)?" role="presentation"><a href="#index">Inicio</a></li>
+        <li data-match-route="#/para/infancia" role="presentation"><a href="#/para/infancia">Infancia</a></li>
+        <li data-match-route="#/facet/gastronomia" role="presentation"><a href="#/facet/gastronomia">Gastronomía</a></li>
+        <li>
+          <input type="text" placeholder="Search">
+          <button>
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <span class="sr-only">Buscar:</span>
+          </button>
+        </li>
+        </ul>
+    </nav>
+    <div ng-view class="container"></div>
+    <footer>
+        <div>&copy;Ayuntamiento de Zaragoza: v<span app-version></span>
+        </div>
+    </footer>
+
+
+    <script>
+    var navdrawerContainer = document.querySelector('.navdrawer-container');
+    var appbarElement = document.querySelector('.app-bar');
+    var menuBtn = document.querySelector('.menu');
+    menuBtn.addEventListener('click', function() {
+        var isOpen = navdrawerContainer.classList.contains('open');
+        if (isOpen) {
+            appbarElement.classList.remove('open');
+            navdrawerContainer.classList.remove('open');
+        } else {
+            appbarElement.classList.add('open');
+            navdrawerContainer.classList.add('open');
+        }
+    }, true);
+    </script>
+    
+
+    <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="app.js"></script>
+    <script src="index/index.js"></script>
+    <script src="sector/sector.js"></script>
+    <script src="facet/facet.js"></script>
+    <script src="components/version/version.js"></script>
+    <script src="components/version/version-directive.js"></script>
+    <script src="components/version/interpolate-filter.js"></script>
+    <script src="components/services.js"></script>
+    <script src="components/directives.js"></script>
+    <script src="components/filters.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+</body>
+
+</html>
