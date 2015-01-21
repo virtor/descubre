@@ -1,3 +1,4 @@
+'use strict';
 describe('filter', function() {
 
 beforeEach(module('filtros'));

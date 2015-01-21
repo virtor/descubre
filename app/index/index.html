@@ -4,14 +4,13 @@
       <span class="sr-only">{{progresoCarga}}% Complete</span>
     </div>
   </div>
-
-<h2 id="actividades">Actividades destacadas</h2>
+<h2 id="actividades">{{strings.index.events}}</h2>
 <accordion close-others="false">
     <accordion-group ng-repeat="registro in actividades" heading="{{registro.title.value}}" is-open="registro.anyOldValue">
       <accordion-heading>
           <strong>{{ registro.title.value }}</strong>
           <div class="pull-right">
-            <span class="label label-success label-as-badge"> {{registro.tipo.value}}</span>
+            <span class="label label-success label-as-badge" ng-show="registro.tipo.value"> {{registro.tipo.value}}</span>
             <span class="badge"> {{registro.startDate.value | date :'dd-MMM-yyyy'}} al {{registro.endDate.value | date :'dd-MMM-yyyy'}} {{registro.startTime.value}} {{registro.endTime.value}}</span>
           </div>
           <div ng-bind-html="registro.horario.value"></div>
@@ -21,60 +20,15 @@
     </accordion-group>
 </accordion>
 
-<h2 id="monumentos">Top Monumentos</h2>
+<h2 id="monumentos">{{strings.index.monuments}}</h2>
 <accordion close-others="false">
     <accordion-group ng-repeat="registro in monumentos" heading="{{registro.title.value}}" is-open="registro.anyOldValue">
       <accordion-heading>
           {{ registro.title.value }}
+          <div class="pull-right">
+            <span class="label label-success label-as-badge" ng-show="registro.tipo.value"> {{registro.tipo.value}}</span>
+          </div>
         </accordion-heading>
         <content-item content="detalle" type="monumento" ng-controller="DetalleController"></content-item>
     </accordion-group>
 </accordion>
-  
-<!--
-  <md-toolbar class="md-theme-light">
-    <h2 id="actividades" class="md-toolbar-tools">
-      <span>Actividades destacadas</span>
-    </h2>
-  </md-toolbar>
-  <md-content>
-    <md-list>
-      <md-item ng-repeat="registro in actividades">
-        <md-item-content>
-          
-          <div class="md-tile-content" ng-controller="DetalleController">
-            <h3><md-button ng-click="detalle()">{{ registro.title.value }}</md-button></h3>
-            <div class="pull-right">
-              <span class="label label-success label-as-badge"> {{registro.tipo.value}}</span>
-              <span class="badge"> {{registro.startDate.value | date :'dd-MMM-yyyy'}} al {{registro.endDate.value | date :'dd-MMM-yyyy'}} {{registro.startTime.value}} {{registro.endTime.value}}</span>
-            </div>
-            <p ng-bind-html="registro.horario.value"></p>
-            <content-item content="detalle" type="evento"></content-item>
-          </div>
-          
-        </md-item-content>
-        <md-divider ng-if="!$last"></md-divider>
-      </md-item>
-    </md-list>
-  </md-content> 
-  
-  <md-toolbar class="md-theme-light">
-    <h2 id="monumentos" class="md-toolbar-tools">
-      <span>Top Monumentos</span>
-    </h2>
-  </md-toolbar>
-
-  <md-content>
-    <md-list>
-      <md-item ng-repeat="registro in monumentos">
-        <md-item-content>
-          <div class="md-tile-content" ng-controller="DetalleController">
-            <h3><md-button ng-click="detalle()">{{ registro.title.value }}</md-button></h3>
-            <content-item content="detalle" type="monumento"></content-item>
-          </div>
-        </md-item-content>
-        <md-divider md-inset ng-if="!$last"></md-divider>
-      </md-item>
-    </md-list>
-  </md-content>
--->

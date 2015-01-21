@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="descubre" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="descubre" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="descubre" class="no-js lt-ie9"> <![endif]-->
+<!--[if lt IE 7]>      <html lang="es" ng-app="descubre" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="es" ng-app="descubre" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="es" ng-app="descubre" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html lang="en" ng-app="descubre" class="no-js">
+<html lang="es" ng-app="descubre" class="no-js">
 <!--<![endif]-->
 
 <head>
@@ -15,7 +15,9 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
+    <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="app.css">
+    <!-- endbuild -->
     <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 
@@ -25,32 +27,30 @@
         <md-toolbar style="min-height: 64px; max-height:64px;" layout="column">
             <h1 class="md-toolbar-tools" flex layout="column">
             <a href="#index" ng-click="goHome()" layout="row" flex>
-                <div flex style="line-height:40px; text-indent: 15px;">Zaragoza</div>
+                <div flex style="line-height:40px; text-indent: 15px;">{{strings.nav.short_title}}</div>
             </a>
             </h1>
         </md-toolbar>
         <md-content flex style="overflow: auto;">
             <ul class="nav nav-stacked">
-            <li data-match-route="#/para/infancia" role="presentation"><a href="#/para/infancia">Infancia</a></li>
-            <li data-match-route="#/para/jovenes" role="presentation"><a href="#/para/jovenes">Jóvenes</a></li>
-            <li data-match-route="#/para/mayores" role="presentation"><a href="#/para/mayores">Personas Mayores</a></li>
-            <li role="presentation" class="divider"></li>
-            <li data-match-route="#/facet/gastronomia" role="presentation"><a href="#/facet/gastronomia">Gastronomía</a>
+            <li data-match-route="#/para/infancia" role="presentation"><a href="#/para/infancia">{{strings.nav.child}}</a></li>
+            <li data-match-route="#/para/jovenes" role="presentation"><a href="#/para/jovenes">{{strings.nav.young}}</a></li>
+            <li data-match-route="#/para/mayores" role="presentation"><a href="#/para/mayores">{{strings.nav.elder}}</a></li>
+            <li role="presentation" class="divider">&nbsp;</li>
+            <li data-match-route="#/facet/gastronomia" role="presentation"><a href="#/facet/gastronomia">{{strings.nav.gastronomy}}</a>
             </li>
-            <li data-match-route="#/facet/alojamiento" role="presentation"><a href="#/facet/alojamiento">Alojamientos</a></li>
-            <li data-match-route="#/facet/agenda" role="presentation"><a href="#/facet/agenda">Actividades</a></li>
-            <li role="presentation" class="divider"></li>
+            <li data-match-route="#/facet/alojamiento" role="presentation"><a href="#/facet/alojamiento">{{strings.nav.accommodation}}</a></li>
+            <li data-match-route="#/facet/agenda" role="presentation"><a href="#/facet/agenda">{{strings.nav.events}}</a></li>
+            <li role="presentation" class="divider">&nbsp;</li>
             <li ng-controller="MenuCtrl">
 	            <form class="navbar-form navbar-right form-inline" ng-submit="buscar()" role="form">
 	                <div class="input-group">
-	                    <input type='text' placeholder="Search" name="q" ng-model="consulta" class="form-control">
-	                    <span class="input-group-addon">
-	                        <i class="glyphicon glyphicon-search"></i>
-	                    </span>
+	                    <input type='text' placeholder="{{strings.nav.search}}" name="q" ng-model="consulta" class="form-control">
+	                    <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i><span class="btn sr-only" type="submit">{{strings.nav.search}}</span></button>
+                        </div>
 	                </div>
-	                <button class="btn sr-only" type="submit">Buscar:</button>
 	            </form>
-              
             </li>
             </ul>
         </md-content>
@@ -65,7 +65,7 @@
                     </button>
                     <!--<div style="line-height: 28px;" hide-sm ng-if="menu.currentSection.name">{{menu.currentSection.name}}</div>-->
                     <span layout="column" layout-align="center center" class="menu-separator-icon">
-                        Descubre la ciudad
+                        {{strings.nav.title}}
                     </span>
                     <div flex></div>
                 </div>
@@ -73,9 +73,6 @@
         </md-toolbar>
         <md-content ng-view md-scroll-y flex class="md-padding" id="contenedor"></md-content>
     </div>
-    <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-animate/angular-animate.min.js"></script>
@@ -85,17 +82,23 @@
     <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
     <script src="bower_components/angular-material/angular-material.min.js"></script>
     <script src="bower_components/hammerjs/hammer.min.js"></script>
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="js/mensajes.js"></script>
     <script src="app.js"></script>
     <script src="index/index.js"></script>
     <script src="sector/sector.js"></script>
     <script src="facet/facet.js"></script>
     <script src="buscar/buscar.js"></script>
-    <script src="components/version/version.js"></script>
-    <script src="components/version/version-directive.js"></script>
-    <script src="components/version/interpolate-filter.js"></script>
-    <script src="components/services.js"></script>
-    <script src="components/directives.js"></script>
-    <script src="components/filters.js"></script>
+    
+    <script src="js/version/version.js"></script>
+    <script src="js/version/version-directive.js"></script>
+    <script src="js/version/interpolate-filter.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/filters.js"></script>
+    <!-- endbuild -->
+
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>

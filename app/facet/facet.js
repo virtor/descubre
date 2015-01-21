@@ -9,7 +9,9 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
   });
 }])
 
-.controller('FacetCtrl', ['$scope', 'Query', '$filter', '$routeParams', function($scope, Query, $filter, $routeParams) {
+.controller('FacetCtrl', ['$scope', 'Query', '$filter', '$routeParams','$rootScope','$mdSidenav', function($scope, Query, $filter, $routeParams,$rootScope,$mdSidenav) {
+    $mdSidenav('left').close();
+
     var categoria = $routeParams.categoria;
     var tipo = '';
     var faceta = '';
@@ -21,19 +23,19 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
       faceta = ['temas_smultiple'];
       queryDefecto = '';
       $scope.vocab = 'restaurante';
-      $scope.titleh2 = 'Gastronomía';
+      $scope.titleh2 = $rootScope.strings.nav.gastronomy;
     } else if (categoria === 'agenda') {
       tipo = 'Actividades';
       faceta = ['temas_smultiple'];
       queryDefecto = ' AND -temas_smultiple:("Cursos y Talleres") AND -temas_smultiple:("Bibliotecas")';
       $scope.vocab = 'evento';
-      $scope.titleh2 = 'Actividades';
+      $scope.titleh2 = $rootScope.strings.nav.events;
     } else if (categoria === 'alojamiento') {
       tipo = 'Alojamientos';
       faceta = ['temas_smultiple'];
       queryDefecto = '';
       $scope.vocab = 'alojamiento';
-      $scope.titleh2 = 'Alojamientos';
+      $scope.titleh2 = $rootScope.strings.nav.accommodation;
     }
     var params = {};
     params.start = 0;
@@ -42,6 +44,7 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
 
     $scope.loadMore = function() {
       if ($scope.busy) return;
+      $scope.busy = true;
       Query.getSolr('*:*' + queryDefecto, tipo, faceta, fq, params.start, 50).then(function(resultados) {
           $scope.resultados = $scope.resultados.concat(resultados.response.docs);
           params.start += 50;
@@ -63,6 +66,7 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
             facetas.push(faceta);
           }
           $scope.facetas = facetas;
+          $scope.busy = false;
       });
     };
 

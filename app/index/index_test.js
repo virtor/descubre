@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 
 describe('descubre.index module', function() {
   var scope, ctrl, sanitize;
@@ -23,4 +23,4 @@ describe('descubre.index module', function() {
     }));
 
   });
-});
+});*/

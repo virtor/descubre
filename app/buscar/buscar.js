@@ -8,19 +8,34 @@ angular.module('descubre.buscar', ['ngRoute', 'descubre.services', 'filtros'])
   });
 }])
 
-.controller('BuscarCtrl', ['$scope', 'Query', '$filter', '$routeParams', function($scope, Query, $filter, $routeParams) {
+.controller('BuscarCtrl', ['$scope', 'Query', '$filter', '$routeParams','$mdSidenav','$rootScope', function($scope, Query, $filter, $routeParams,$mdSidenav,$rootScope) {
 	$scope.consulta = $routeParams.consulta;
+	$mdSidenav('left').close();
+	var cons = $scope.consulta.toLowerCase().trim();
+	if (cons.indexOf(' ') > 0) {
+		var arr = cons.split(' ');
+		cons = '';
+		for(var i = 0; i < arr.length; i++) {
+		    cons = cons + '(?=.*' + arr[i] + ')'
+		}
+		
+	}
+	var params = {};
+    params.start = 0;
+    $scope.resultado = [];
+	$scope.loadMore = function() {
+      if ($scope.busy) return;
 
-	Query.list('SELECT DISTINCT ?uri ?title ?latitud ?longitud \
-		WHERE { \
-		 ?uri ?s  ?p. \
-		 ?uri rdfs:label  ?title. \
-		 ?uri geo:geometry ?geo. \
-		 ?geo geo:lat ?latitud. \
-		 ?geo geo:long ?longitud. \
-		FILTER (REGEX(STR(?p), "' + $scope.consulta.toLowerCase() + '", "i")) \
-		} LIMIT 50').then(function(result) {
-        $scope.resultado = result.results.bindings;
-    });
+      $scope.busy = true;
+      Query.list($rootScope.query.search.format(cons, params.start)).then(function(result) {
+			$scope.busy = false;
+        	$scope.resultado = $scope.resultado.concat(result.results.bindings);
+        	if (result.results.bindings.length > 0) {
+        		params.start += 50;
+        	}
+    	});
+  	};
+
+	
 
 }]);

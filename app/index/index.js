@@ -9,44 +9,20 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
     });
 }])
 
-.controller('IndexCtrl', ['$scope', 'Query', '$filter'/*, '$mdSidenav'*/, function($scope, Query, $filter/*, $mdSidenav*/) {
+.controller('IndexCtrl', ['$scope', 'Query', '$filter', '$mdSidenav', function($scope, Query, $filter, $mdSidenav) {
+    $mdSidenav('left').close();
 
     $scope.actividades = [];
     $scope.monumentos = [];
     // $scope.restaurantes = [];
     $scope.progresoCarga=0;
-    Query.list('PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
-        SELECT DISTINCT ?uri ?title ?latitud ?longitud ?startDate ?endDate ?startTime ?endTime ?horario ?idTipo ?tipo\
-        WHERE { ?uri a acto:Evento. \
-           OPTIONAL{ ?uri rdfs:label  ?title}.\
-           OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
-           OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.}\
-           OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.}\
-           OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.}\
-           OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.}\
-           OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
-           OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
-           OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#notation>  ?idTipo.}\
-           OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
-           OPTIONAL {?uri geo:geometry ?geo.\
-           ?geo geo:lat ?latitud.\
-           ?geo geo:long ?longitud}.\
-           ?uri acto:destacada "true".\
-           ?uri acto:orden ?orden.\
-        } ORDER BY ASC(?orden) LIMIT 12').then(function(result) {
+
+    Query.list(query.index.actividades).then(function(result) {
         $scope.actividades = result.results.bindings;
         $scope.progresoCarga = $scope.progresoCarga + 50;
     });
 
-    Query.list('PREFIX monumento: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
-        SELECT DISTINCT ?uri ?title ?latitud ?longitud \
-        WHERE { ?uri a monumento:LugarInteresTuristico. \
-           OPTIONAL{ ?uri rdfs:label  ?title}.\
-           OPTIONAL {?uri geo:geometry ?geo.\
-           ?geo geo:lat ?latitud.\
-           ?geo geo:long ?longitud}.\
-           ?uri monumento:destacado "S".\
-        }').then(function(result) {
+    Query.list(query.index.monumentos).then(function(result) {
         $scope.monumentos = result.results.bindings;
         $scope.progresoCarga = $scope.progresoCarga + 50;
     });
@@ -179,10 +155,13 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
             $scope.markers['rest' + result.id] = {
                   lat: Math.round10(result.geometry.coordinates[1], -4),
                   lng: Math.round10(result.geometry.coordinates[0], -4),
-                  message: '<strong>' + result.title 
-                    + (angular.isDefined(result.startDate) ? '. <small>' + result.startDate + '</small>': '') 
-                    + (angular.isDefined(result.endDate) ? '. <small>' + result.endDate + '</small>': '') 
-                    + '</strong><br/>' 
+                  message: '<strong>' + result.title + '</strong><div>'
+                    + (angular.isDefined(result.subEvent[0].fechaInicio) ? '<small>' + $filter('date')(result.subEvent[0].fechaInicio, 'dd-MM-yyyy') + '</small>': '') 
+                    + (angular.isDefined(result.subEvent[0].fechaFinal) ? ' hasta el <small>' + $filter('date')(result.subEvent[0].fechaFinal, 'dd-MM-yyyy') + '</small>': '') 
+                    + (angular.isDefined(result.subEvent[0].horaInicio) ? '. <small>' + result.subEvent[0].horaInicio + '</small>': '') 
+                    + (angular.isDefined(result.subEvent[0].horaFinal) ? ' - <small>' + result.subEvent[0].horaFinal + '</small>': '') 
+                    + '</div>' 
+                    + (angular.isDefined(result.subEvent[0].horario) ? '<div>' + result.subEvent[0].horario + '</div>': '') 
                     + result.description,
                   icon:icono
             };
@@ -199,7 +178,7 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
      $scope.claseMonumento='glyphicon glyphicon-refresh';
      Query.getApi('/recurso/turismo/monumento?rows=200&fl=id,title,address,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {
         var icono = {
-            iconUrl: '//www.zaragoza.es/contenidos/iconos/monumentos20.png',
+            iconUrl: '//www.zaragoza.es/contenidos/iconos/arte.png',
              iconSize: [22, 22]
         }
         $scope.markers = {
@@ -568,26 +547,27 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
     function(value) {
       if (value) {
         var consultaDetalle;
-        if ($scope.registro.uri.value) {
-          var uri = $scope.registro.uri.value;
-          consultaDetalle = $filter('queryDetalle')($filter('tipo')(uri),$filter('identificador')(uri));
+        if ($scope.registro.uri) {
+          if ($scope.registro.uri.value) {
+            var uri = $scope.registro.uri.value;
+            consultaDetalle = $filter('queryDetalle')($filter('tipo')(uri),$filter('identificador')(uri));
+          } else {
+            var identificador = $scope.registro.id.split('-')[1];
+            consultaDetalle = $filter('queryDetalle')($scope.vocab,identificador);
+          }
+          if (consultaDetalle == '') {
+              Query.describe(uri).then(function(result) {
+                  $scope.attrs = [];
+                  $scope.detalle = result;
+              });
+          } else {
+              Query.list(consultaDetalle).then(function(result) {
+                  $scope.attrs = result.head.vars;
+                  $scope.detalle = result.results.bindings[0];
+              });
+          }
         } else {
-          var identificador = $scope.registro.id.split('-')[1];
-          consultaDetalle = $filter('queryDetalle')($scope.vocab,identificador);
-        }
-        console.log(consultaDetalle);
-        if (consultaDetalle == '') {
-            Query.describe(uri).then(function(result) {
-                $scope.attrs = [];
-                $scope.detalle = result;
-                console.log($scope.detalle);
-            });
-        } else {
-            Query.list(consultaDetalle).then(function(result) {
-                $scope.attrs = result.head.vars;
-                $scope.detalle = result.results.bindings[0];
-                console.log($scope.detalle);
-            });
+          $scope.detalle = $scope.registro;
         }
       }
     }

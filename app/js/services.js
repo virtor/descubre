@@ -1,3 +1,4 @@
+'use strict';
 angular.module('descubre.services', [])
 
 .factory('Query', ['$http', '$q', function($http, $q) {

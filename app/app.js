@@ -14,7 +14,10 @@ angular.module('descubre', [
   'infinite-scroll',
   'descubre.directives',
   'leaflet-directive'
-]).
+]).run(function($rootScope) {
+    $rootScope.strings = strings.es;
+    $rootScope.query = query;
+}).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/index'});
 }]).controller('MenuCtrl', ['$scope', '$mdSidenav', '$location', function($scope, $mdSidenav, $location) {
