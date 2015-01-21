@@ -1,0 +1,9 @@
+<h2 id="actividades">Resultado <small>Consulta: {{consulta}}</small></h2>
+<accordion close-others="false">
+    <accordion-group ng-repeat="registro in resultado" heading="{{registro.title.value}}" is-open="registro.anyOldValue">
+      <accordion-heading>
+          <strong>{{ registro.title.value }}</strong>          
+        </accordion-heading>
+        <content-item content="detalle" ng-controller="DetalleController"></content-item>
+    </accordion-group>
+</accordion>

@@ -14,74 +14,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
     <link rel="stylesheet" href="app.css">
     <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 
-<body>
-    <header class="app-bar promote-layer">
-        <button class="menu"><img src="img/hamburger.png"></button>
-        <h1 class="logo">Descubre la ciudad</h1>
-        
-    </header>
-    <nav class="navdrawer-container promote-layer" role="navigation">
-      <ul>
-        <li data-match-route="/?(navbar)?" role="presentation"><a href="#index">Inicio</a></li>
-        <li data-match-route="#/para/infancia" role="presentation"><a href="#/para/infancia">Infancia</a></li>
-        <li data-match-route="#/facet/gastronomia" role="presentation"><a href="#/facet/gastronomia">Gastronomía</a></li>
-        <li>
-          <input type="text" placeholder="Search">
-          <button>
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          <span class="sr-only">Buscar:</span>
-          </button>
-        </li>
-        </ul>
-    </nav>
-    <div ng-view class="container"></div>
-    <footer>
-        <div>versión:<span app-version></span>
-        </div>
-    </footer>
+<body layout="horizontal">
+   <md-sidenav layout="column" style="overflow: hidden; display: flex;" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-sm')">
 
+        <md-toolbar style="min-height: 64px; max-height:64px;" layout="column">
+            <h1 class="md-toolbar-tools" flex layout="column">
+            <a href="#index" ng-click="goHome()" layout="row" flex>
+                <div flex style="line-height:40px; text-indent: 15px;">Zaragoza</div>
+            </a>
+            </h1>
+        </md-toolbar>
+        <md-content flex style="overflow: auto;">
+            <ul class="nav nav-stacked">
+            <li data-match-route="#/para/infancia" role="presentation"><a href="#/para/infancia">Infancia</a></li>
+            <li data-match-route="#/para/jovenes" role="presentation"><a href="#/para/jovenes">Jóvenes</a></li>
+            <li data-match-route="#/para/mayores" role="presentation"><a href="#/para/mayores">Personas Mayores</a></li>
+            <li role="presentation" class="divider"></li>
+            <li data-match-route="#/facet/gastronomia" role="presentation"><a href="#/facet/gastronomia">Gastronomía</a>
+            </li>
+            <li data-match-route="#/facet/alojamiento" role="presentation"><a href="#/facet/alojamiento">Alojamientos</a></li>
+            <li data-match-route="#/facet/agenda" role="presentation"><a href="#/facet/agenda">Actividades</a></li>
+            <li role="presentation" class="divider"></li>
+            <li ng-controller="MenuCtrl">
+	            <form class="navbar-form navbar-right form-inline" ng-submit="buscar()" role="form">
+	                <div class="input-group">
+	                    <input type='text' placeholder="Search" name="q" ng-model="consulta" class="form-control">
+	                    <span class="input-group-addon">
+	                        <i class="glyphicon glyphicon-search"></i>
+	                    </span>
+	                </div>
+	                <button class="btn sr-only" type="submit">Buscar:</button>
+	            </form>
+              
+            </li>
+            </ul>
+        </md-content>
+    </md-sidenav>
 
-    <script>
-    var navdrawerContainer = document.querySelector('.navdrawer-container');
-    var appbarElement = document.querySelector('.app-bar');
-    var menuBtn = document.querySelector('.menu');
-    menuBtn.addEventListener('click', function() {
-        var isOpen = navdrawerContainer.classList.contains('open');
-        if (isOpen) {
-            appbarElement.classList.remove('open');
-            navdrawerContainer.classList.remove('open');
-        } else {
-            appbarElement.classList.add('open');
-            navdrawerContainer.classList.add('open');
-        }
-    }, true);
-    </script>
-    
-
+    <div layout="column" layout-fill tabIndex="-1" role="main" ng-controller="MenuCtrl">
+        <md-toolbar layout="column">
+            <div class="md-toolbar-tools" ng-click="openMenu()" flex layout="column">
+                <div layout="row" flex>
+                    <button class="menu-icon" hide-gt-sm aria-label="Toggle Menu" style="position: relative; top: -5px;">
+                        <md-icon icon="https://material.angularjs.org/img/icons/ic_menu_24px.svg" style=""></md-icon>
+                    </button>
+                    <!--<div style="line-height: 28px;" hide-sm ng-if="menu.currentSection.name">{{menu.currentSection.name}}</div>-->
+                    <span layout="column" layout-align="center center" class="menu-separator-icon">
+                        Descubre la ciudad
+                    </span>
+                    <div flex></div>
+                </div>
+            </div>
+        </md-toolbar>
+        <md-content ng-view md-scroll-y flex class="md-padding" id="contenedor"></md-content>
+    </div>
     <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+    <script src="bower_components/angular-material/angular-material.min.js"></script>
+    <script src="bower_components/hammerjs/hammer.min.js"></script>
     <script src="app.js"></script>
     <script src="index/index.js"></script>
     <script src="sector/sector.js"></script>
     <script src="facet/facet.js"></script>
+    <script src="buscar/buscar.js"></script>
     <script src="components/version/version.js"></script>
     <script src="components/version/version-directive.js"></script>
     <script src="components/version/interpolate-filter.js"></script>
     <script src="components/services.js"></script>
     <script src="components/directives.js"></script>
     <script src="components/filters.js"></script>
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
     <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
 </body>
