@@ -82,7 +82,7 @@ strings.es = {
 
 var query = {
     /*jshint multistr: true */
-    search: 'SELECT DISTINCT ?uri ?title ?latitud ?longitud \
+    search: 'SELECT DISTINCT ?uri ?title \
         WHERE { \
          ?uri ?s  ?p. \
          ?uri rdfs:label  ?title. \
@@ -217,7 +217,7 @@ var query = {
     },
     index: {
         actividades : 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
-        SELECT DISTINCT ?uri ?title ?latitud ?longitud ?startDate ?endDate ?startTime ?endTime ?horario ?tipo\
+        SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo\
         WHERE { ?uri a acto:Evento. \
            OPTIONAL{ ?uri rdfs:label  ?title}.\
            OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
@@ -228,19 +228,14 @@ var query = {
            OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
            OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
            OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
-           OPTIONAL {?uri geo:geometry ?geo.\
-           ?geo geo:lat ?latitud.\
-           ?geo geo:long ?longitud}.\
            ?uri acto:destacada "true".\
            ?uri acto:orden ?orden.\
         } ORDER BY ASC(?orden) LIMIT 20',
         monumentos: 'PREFIX monumento: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
-        SELECT DISTINCT ?uri ?title ?latitud ?longitud \
+        SELECT DISTINCT ?uri ?title ?tipo \
         WHERE { ?uri a monumento:LugarInteresTuristico. \
            OPTIONAL{ ?uri rdfs:label  ?title}.\
-           OPTIONAL {?uri geo:geometry ?geo.\
-           ?geo geo:lat ?latitud.\
-           ?geo geo:long ?longitud}.\
+           ?uri monumento:estiloArtistico ?tipo. \
            ?uri monumento:destacado "S".\
         }'
     },
@@ -263,7 +258,7 @@ var query = {
             */
 
         events:'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
-            SELECT DISTINCT ?uri ?title ?latitud ?longitud ?startDate ?endDate ?startTime ?endTime ?horario ?tipo\
+            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo\
             WHERE { ?uri a acto:Evento. \
                OPTIONAL{ ?uri rdfs:label  ?title}.\
                OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
@@ -274,18 +269,12 @@ var query = {
                OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
                OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
-               OPTIONAL {?uri geo:geometry ?geo.\
-               ?geo geo:lat ?latitud.\
-               ?geo geo:long ?longitud}.\
                ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/cultura-ocio/poblacion-destinataria/evento-zaragoza/{0}> \
             }\
             order by ?startDate',
-        resources: 'SELECT DISTINCT ?uri ?title ?latitud ?longitud (group_concat(distinct ?tipo;separator=",")) as ?tipo \
+        resources: 'SELECT DISTINCT ?uri ?title (group_concat(distinct ?tipo;separator=",")) as ?tipo \
               WHERE { ?uri a <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/equipamiento>. \
                   OPTIONAL{ ?uri rdfs:label  ?title}. \
-                  OPTIONAL {?uri geo:geometry ?geo. \
-                  ?geo geo:lat ?latitud. \
-                  ?geo geo:long ?longitud}. \
                   ?uri <http://www.w3.org/2006/vcard/ns#category> ?tipoInt. \
                   ?tipoInt rdfs:label ?tipo. \
                   ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/clase-persona/{0}> \
