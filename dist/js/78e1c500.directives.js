@@ -4,7 +4,7 @@ angular.module('descubre.directives', [])
         var registro;
         var getTemplate = function(contentType) {
             /*jshint multistr: true */
-        	var mapa = '<leaflet center="center" markers="markers" height="380px" style="width:100%" layers="layers" geojson="geojson"></leaflet>\
+        	var mapa = '<leaflet center="center" markers="markers" height="280px" style="width:100%" layers="layers" geojson="geojson"></leaflet>\
                         ' + $rootScope.strings.detail.near + ':<br/> \
                         <button ng-click="actosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseActo" ng-class="claseActo"></span>' + $rootScope.strings.detail.events + '</button>\
                         <button ng-click="monumentosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseMonumento" ng-class="claseMonumento"></span>' + $rootScope.strings.detail.monuments + '</button>\
