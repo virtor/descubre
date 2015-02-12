@@ -11,6 +11,7 @@ strings.es = {
         accommodation: 'Alojamiento',
         events: 'Actividades',
         resources: 'Recursos',
+        agenda: 'Agenda',
         search: 'Buscar'
     },
     index: {
@@ -39,6 +40,7 @@ strings.es = {
     },
     detail: {
         near: 'Cerca de aquí',
+        addAgenda: 'Añadir a agenda',
         events: 'Actividades',
         monuments: 'Monumentos',
         gastronomy: 'Restaurantes',
@@ -118,7 +120,7 @@ var query = {
                 ?uri dcterms:identifier "{0}".\
                 }',
         alojamiento: 'PREFIX locn: <http://www.w3.org/ns/locn#>\
-                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?accesibilidad ?numCamas ?numHabitaciones ?streetAdr ?addressLocality ?postCode ?email ?socioHoreca ?categoria ?locality ?logo ?photo ?url\
+                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?accesibilidad ?numCamas ?numHabitaciones ?streetAdr ?addressLocality ?postCode ?email ?socioHoreca ?categoria ?logo ?photo ?url\
                 WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
@@ -169,9 +171,8 @@ var query = {
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        monumento:'PREFIX locn: <http://www.w3.org/ns/locn#>\
-                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
-                WHERE { ?uri a <http://idi.fundacionctic.org/cruzar/turismo#Monumento>.\
+        monumento:'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
+                WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#LugarInteresTuristico>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
@@ -193,8 +194,7 @@ var query = {
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        recurso: 'PREFIX locn: <http://www.w3.org/ns/locn#>\
-                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?email ?url ?comment ?servicios ?accesibilidad ?streetAdr ?horario ?price  \
+        recurso: 'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?email ?url ?comment ?servicios ?accesibilidad ?streetAdr ?horario ?price  \
                 WHERE { ?uri a <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/equipamiento>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
