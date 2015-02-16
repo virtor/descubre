@@ -85,7 +85,11 @@ angular.module('descubre.services', [])
             //uri, title, date, startTime, endTime, x, y
             console.log('add');
             var dato = {};
-            dato.uri = registro.uri.value || registro.uri;
+            if (registro.uri) {
+                dato.uri = registro.uri.value || registro.uri;
+            } else {
+                dato.uri = 'punto-' + registro.id + '-mapa-colab';
+            }
             dato.title = registro.title.value || registro.title;
             dato.date = $filter('getDate')(registro);
             dato.startTime = $filter('getStartTime')(registro);
@@ -141,6 +145,16 @@ angular.module('descubre.services', [])
             add: add,
             remove: remove,
             update: update,
+            existe: function(registro){
+                var uri = '';
+                if (registro.uri) {
+                    uri = registro.uri.value || registro.uri;
+                } else {
+                    uri = 'punto-' + registro.id + '-mapa-colab';
+                }
+                var items = sessionStorage.getItem('items') || '';
+                return items.indexOf(uri) >= 0;
+            },
             list: function() {
                 console.log('LLEGA');
                 return JSON.parse(sessionStorage.getItem('items')) || [];

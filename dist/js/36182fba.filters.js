@@ -121,6 +121,8 @@ angular.module('filtros', [])
                 } else {
                     return registro.latitud;
                 }
+            } else if (registro.geometry) {
+                return registro.geometry.coordinates[1];
             } else {
                 return undefined;
             }
@@ -135,6 +137,8 @@ angular.module('filtros', [])
                 } else {
                     return registro.longitud;
                 }
+            } else if (registro.geometry) {
+                return registro.geometry.coordinates[0];
             } else {
                 return undefined;
             }

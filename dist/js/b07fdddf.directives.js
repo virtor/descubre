@@ -4,9 +4,9 @@ angular.module('descubre.directives', [])
         var registro;
         var getTemplate = function(contentType) {
             /*jshint multistr: true */
-          var btnAddAgenda = '<md-button ng-click="addCalendar()" class="pull-right md-fab md-warn" aria-label="' + $rootScope.strings.detail.addAgenda + '">\
-                        <span class="glyphicon glyphicon-calendar"></span>\
-                      </md-button>';
+          // var btnAddAgenda = '<md-button ng-click="addCalendar()" class="pull-right md-fab md-warn" aria-label="' + $rootScope.strings.detail.addAgenda + '">\
+          //               <span class="glyphicon glyphicon-calendar"></span>\
+          //             </md-button>';
         	var mapa = '<leaflet center="center" markers="markers" height="280px" style="width:100%" layers="layers" geojson="geojson"></leaflet>\
                         ' + $rootScope.strings.detail.near + ':<br/> \
                         <button ng-click="actosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseActo" ng-class="claseActo"></span>' + $rootScope.strings.detail.events + '</button>\
@@ -49,7 +49,7 @@ angular.module('descubre.directives', [])
                         '</p>' + 
                         (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
                         (registro.photo ? '<div><img src="//www.zaragoza.es' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') + 
-                        btnAddAgenda + 
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
                      break;
                   case 'evento':
@@ -80,7 +80,7 @@ angular.module('descubre.directives', [])
                             (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') + 
                         '</p>' + 
                         (registro.accesibilidad ? '<p>' + (registro.accesibilidad.value === 'S' ? 'Accesible para personas con movilidad reducida':(registro.accesibilidad.value === 'N' ? 'No accesible para personas con movilidad reducida':registro.accesibilidad.value)) + '</p>' : '') + 
-                        btnAddAgenda + 
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
                       break;
                  case 'monumento':
@@ -105,7 +105,7 @@ angular.module('descubre.directives', [])
                        '</p>' + 
                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
                        (registro.photo ? '<div><img src="' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') + 
-                       btnAddAgenda + 
+                       // btnAddAgenda + 
                        (registro.latitud ? mapa : '');
                      break;
                  case 'alojamiento':
@@ -128,7 +128,7 @@ angular.module('descubre.directives', [])
                         '</p>' + 
                         (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
                         (registro.photo ? '<div><img src="//www.zaragoza.es' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') + 
-                        btnAddAgenda + 
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
                      break;
                 case 'recurso':
@@ -147,14 +147,14 @@ angular.module('descubre.directives', [])
                             (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') + 
                         '</p>' + 
                         (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
-                        btnAddAgenda + 
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
                      break;
                   case 'mapa-colaborativo':
                        template = '<p>' + registro.description + '</p>' +
                        		(registro.link ? '<p>Sitio web: <a href="' + registro.link + '">' + registro.link + '</a></p>' : '') + 
 
-                       		btnAddAgenda + 
+                       		// btnAddAgenda + 
                         	(registro.latitud ? mapa : '');
                      break;
                      
