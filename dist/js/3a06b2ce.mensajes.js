@@ -18,24 +18,54 @@ strings.es = {
         events: 'Actividades destacadas',
         monuments: 'Monumentos destacados'
     },
+    facet: {
+        clear: 'Borrar filtro',
+        
+    },
     search: {
         result: 'Resultado',
         query: 'Consulta'
     },
     sector: {
         youth: {
-            menu : [
-                {opt:'marcha', text:'Zonas Marcha', uri:'/recurso/mapas-colaborativos/134?srsname=wgs84&rows=200'},
-                {opt:'noche', text:'Noche', uri:'/recurso/mapas-colaborativos/125?srsname=wgs84&rows=200'},
-                {opt:'tomar', text:'Tomar Algo', uri:'/recurso/mapas-colaborativos/135?srsname=wgs84&rows=200'},
-                {opt:'envivo', text:'Música en vivo', uri:'/recurso/mapas-colaborativos/137?srsname=wgs84&rows=200'},
-                {opt:'zonasverdes', text:'Zonas verdes', uri:'/recurso/mapas-colaborativos/139?srsname=wgs84&rows=200'},
-                {opt:'compras', text:'De compras', uri:'/recurso/mapas-colaborativos/131?srsname=wgs84&rows=200'},
+            menu: [{
+                    opt: 'marcha',
+                    text: 'Zonas Marcha',
+                    uri: '/recurso/mapas-colaborativos/134?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'noche',
+                    text: 'Noche',
+                    uri: '/recurso/mapas-colaborativos/125?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'tomar',
+                    text: 'Tomar Algo',
+                    uri: '/recurso/mapas-colaborativos/135?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'envivo',
+                    text: 'Música en vivo',
+                    uri: '/recurso/mapas-colaborativos/137?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'zonasverdes',
+                    text: 'Zonas verdes',
+                    uri: '/recurso/mapas-colaborativos/139?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'compras',
+                    text: 'De compras',
+                    uri: '/recurso/mapas-colaborativos/131?srsname=wgs84&rows=200'
+                },
                 // {opt:'bailar', text:'Para bailar', uri:'/recurso/mapas-colaborativos/129?srsname=wgs84&rows=200'},
-                {opt:'tapas', text:'De tapas', uri:'/recurso/mapas-colaborativos/130?srsname=wgs84&rows=200'},
+                {
+                    opt: 'tapas',
+                    text: 'De tapas',
+                    uri: '/recurso/mapas-colaborativos/130?srsname=wgs84&rows=200'
+                },
                 // {opt:'accion', text:'Acción', uri:'/recurso/mapas-colaborativos/127?srsname=wgs84&rows=200'},
-                {opt:'ocio', text:'Ocio', uri:'/recurso/mapas-colaborativos/136?srsname=wgs84&rows=200'}
-              ]
+                {
+                    opt: 'ocio',
+                    text: 'Ocio',
+                    uri: '/recurso/mapas-colaborativos/136?srsname=wgs84&rows=200'
+                }
+            ]
         }
     },
     detail: {
@@ -172,7 +202,7 @@ var query = {
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        monumento:'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
+        monumento: 'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
                 WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#LugarInteresTuristico>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
@@ -217,7 +247,7 @@ var query = {
                 }'
     },
     index: {
-        actividades : 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+        actividades: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
             SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
             WHERE { ?uri a acto:Evento. \
                OPTIONAL{ ?uri rdfs:label  ?title}.\
@@ -247,11 +277,88 @@ var query = {
                     ?geo geo:long ?longitud.}\
             } group by ?uri ?title ?tipo'
     },
+    faceta: {
 
+        events: {
+            query: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#> \
+            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a acto:Evento. \
+               OPTIONAL{ ?uri rdfs:label ?title}. \
+               OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.} \
+               OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.} \
+               OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.} \
+               OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.} \
+               OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.} \
+               OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.} \
+               OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.} \
+               OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.} \
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.} \
+            	bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
+				bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
+            	bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
+            	bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
+				filter(?diff >= 0) . \
+				{0} \
+            } \
+            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?startFixed ?diff \
+            order by asc(?startFixed) asc(?diff)',
+
+            facet: 'SELECT ?urifaceta ?faceta COUNT(?faceta) as ?numero \
+            WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#Evento>. \
+                    ?uri <http://www.w3.org/2006/vcard/ns#category> ?urifaceta. \
+                    ?urifaceta <http://www.w3.org/2004/02/skos/core#prefLabel> ?faceta. \
+                    {0}\
+            } \
+            GROUP BY ?urifaceta ?faceta'
+        },
+        gastronomy: {
+            query: 'SELECT DISTINCT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>. \
+               OPTIONAL{ ?uri rdfs:label  ?title}. \
+               OPTIONAL {?uri <http://www.zaragoza.es/skos/vocab/tenedores> ?tenedores.} \
+               bind(if(bound(?tenedores),concat(?tenedores," tenedor(es)"),"Restaurante") as ?tipo) . \
+               {0} \
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.} \
+            } group by ?uri ?title ?tipo \
+            order by desc(?tipo)',
+
+            facet: 'SELECT ?faceta COUNT(?faceta) as ?numero \
+            WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>. \
+                optional{?uri <http://www.zaragoza.es/skos/vocab/tenedores> ?tenedores.} \
+				bind(if(bound(?tenedores),concat(?tenedores," tenedor(es)"),"Restaurante") as ?faceta) . \
+				{0} \
+            } \
+            GROUP BY ?faceta'
+        },
+        accommodation: {
+            query: 'PREFIX locn: <http://www.w3.org/ns/locn#> \
+            SELECT DISTINCT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>. \
+               OPTIONAL{ ?uri rdfs:label  ?title}. \
+               OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#categoria> ?tipo.} \
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.} \
+               {0} \
+            } group by ?uri ?title ?tipo \
+            order by desc(?tipo)',
+
+            facet: 'SELECT ?faceta COUNT(?faceta) as ?numero \
+                WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>. \
+                ?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#categoria> ?faceta. \
+                {0}\
+                } \
+                GROUP BY ?faceta'
+        }
+    },
 
     sector: {
 
-        events:'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+        events: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
             SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud\
             WHERE { ?uri a acto:Evento. \
                OPTIONAL{ ?uri rdfs:label  ?title}.\
@@ -285,5 +392,5 @@ var query = {
                   group by ?uri ?title ?latitud ?longitud \
                   order by ?title\
             }group by ?uri ?title ?tipo'
-        }
+    }
 };

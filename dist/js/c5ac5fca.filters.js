@@ -24,7 +24,6 @@ angular.module('filtros', [])
     })
     .filter('tipo', function() {
         return function(uri) {
-            console.log(uri);
             if (uri.indexOf('/api/recurso/cultura-ocio/evento-zaragoza') >= 0) {
                 return 'evento';
             } else if (uri.indexOf('/api/recurso/turismo/monumento') >= 0) {
@@ -143,6 +142,17 @@ angular.module('filtros', [])
                 return undefined;
             }
 
+        };
+    })
+    .filter('parsedate', function($filter) {
+        return function(input) {
+            var fec = input.split('-');
+            var parseYear = ' yyyy';
+            if (new Date().getFullYear() == fec[0]) {
+                parseYear = '';
+            }
+
+            return $filter('date')(input, 'EEEE dd MMMM' + parseYear);
         };
     })
     .filter('valor', function() {
