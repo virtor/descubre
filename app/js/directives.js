@@ -1,10 +1,46 @@
 'use strict';
 angular.module('descubre.directives', [])
-    .directive('contentItem', function($compile,$filter,$rootScope) {
+    .directive('mostrarfecha', function($compile, $filter) {
+        function linker(scope, element, attrs) {
+            var registro = angular.fromJson(attrs.mostrarfecha);
+            var html = '';
+            if (registro.startDate) {
+                if (registro.endDate) {
+                    if (registro.startDate.value === registro.endDate.value) {
+                        html = $filter('parsedate')(registro.startDate.value)
+                    } else {
+                        html = 'Del ' + $filter('parsedate')(registro.startDate.value) + ' al ' + $filter('parsedate')(registro.endDate.value);
+                    }
+                } else {
+                    html = 'Desde el ' + $filter('parsedate')(registro.startDate.value);
+                }
+            } else {
+                if (registro.endDate) {
+                    html = 'Hasta el ' + $filter('parsedate')(registro.endDate.value);
+                }
+            }
+            if (registro.startTime) {
+              html = html + ' ' + registro.startTime.value ;
+            }
+            if (registro.endTime) {
+              html = html + ' ' + registro.endTime.value;
+            }
+            element.html(html);
+            $compile(element.contents())(scope);
+        }
+        return {
+            restrict: 'A',
+            link: linker
+        };
+    })
+    .directive('contentItem', function($compile, $filter, $rootScope) {
         var registro;
         var getTemplate = function(contentType) {
             /*jshint multistr: true */
-        	var mapa = '<leaflet center="center" markers="markers" height="280px" style="width:100%" layers="layers" geojson="geojson"></leaflet>\
+            // var btnAddAgenda = '<md-button ng-click="addCalendar()" class="pull-right md-fab md-warn" aria-label="' + $rootScope.strings.detail.addAgenda + '">\
+            //               <span class="glyphicon glyphicon-calendar"></span>\
+            //             </md-button>';
+            var mapa = '<leaflet center="center" markers="markers" height="280px" style="width:100%" layers="layers" geojson="geojson"></leaflet>\
                         ' + $rootScope.strings.detail.near + ':<br/> \
                         <button ng-click="actosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseActo" ng-class="claseActo"></span>' + $rootScope.strings.detail.events + '</button>\
                         <button ng-click="monumentosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseMonumento" ng-class="claseMonumento"></span>' + $rootScope.strings.detail.monuments + '</button>\
@@ -27,138 +63,144 @@ angular.module('descubre.directives', [])
 
 
             var template = '';
-            console.log(contentType);
-             switch (contentType) {
-                 case 'restaurante':
-                    template = '<p>' + 
-                            (registro.logo ? '<img src="//www.zaragoza.es' + registro.logo.value + '" class="pull-right"/>' : '') +
-                            (registro.comment ? registro.comment.value : '') + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.capacidad ? $rootScope.strings.detail.label.size + ': ' + registro.capacidad.value : '')  + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.url ? ' ' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a>' : '') + 
-                            (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '')  + 
-                            (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value+ '</a>' : '') + 
-                            (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') + 
-                            (registro.postCode ? ' ' + $rootScope.strings.detail.label.postal_code + ': ' + registro.postCode.value : '') + 
-                            (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') + 
-                        '</p>' + 
-                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
-                        (registro.photo ? '<div><img src="//www.zaragoza.es' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') + 
+            switch (contentType) {
+                case 'restaurante':
+                    template = '<p>' +
+                        (registro.logo ? '<img src="//www.zaragoza.es' + registro.logo.value + '" class="pull-right"/>' : '') +
+                        (registro.comment ? registro.comment.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.capacidad ? $rootScope.strings.detail.label.size + ': ' + registro.capacidad.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.url ? ' ' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a>' : '') +
+                        (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') +
+                        (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value + '</a>' : '') +
+                        (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') +
+                        (registro.postCode ? ' ' + $rootScope.strings.detail.label.postal_code + ': ' + registro.postCode.value : '') +
+                        (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') +
+                        '</p>' +
+                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') +
+                        (registro.photo ? '<div><img src="//www.zaragoza.es' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') +
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
-                     break;
-                  case 'evento':
-                      template = '<p>' + 
-                            (registro.image ? '<img src="' + registro.image.value + '" class="pull-right" width="100"/>' : '') + 
-                            (registro.comment ? registro.comment.value : '') + 
-                        '</p>' + 
-                            (registro.programa ? '<p>' + $rootScope.strings.detail.label.program + ': ' + registro.programa.value + '</p>' : '') + 
-                        '<p>' + 
-                            (registro.startDate ? ' ' + $rootScope.strings.detail.label.start_date + ': ' + $filter('date')(registro.startDate.value, 'dd-MM-yyyy') : '') + 
-                            (registro.endDate ? ' ' + $rootScope.strings.detail.label.end_date + ': ' + $filter('date')(registro.endDate.value, 'dd-MM-yyyy') : '')  + 
-                            (registro.startTime ? ' ' + $rootScope.strings.detail.label.start_time + ': ' + registro.startTime.value : '') + 
-                            (registro.endTime ? ' ' + $rootScope.strings.detail.label.end_time + ': ' + registro.endTime.value : '') + 
-                            (registro.openingHours ? ' ' + $rootScope.strings.detail.label.opening_hours + ': ' + registro.openingHours.value : '') + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.tipoEntrada ? $rootScope.strings.detail.label.accession + ': ' + registro.tipoEntrada.value : '') + 
-                            (registro.price ? ' ' + $rootScope.strings.detail.label.price + ': ' + registro.price.value : '') + 
-                            (registro.maxParticipantes ? $rootScope.strings.detail.label.capacity + ': ' + registro.maxParticipantes.value : '') + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.url ? ' ' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a>' : '') + 
-                            // TODO cuando esté bien cargado el lugar de realización
-                            (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') + 
-                            (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value+ '</a>' : '') + 
-                            (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') + 
-                            (registro.postCode ? ' ' + $rootScope.strings.detail.label.postal_code + ': ' + registro.postCode.value : '') + 
-                            (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') + 
-                        '</p>' + 
-                        (registro.accesibilidad ? '<p>' + (registro.accesibilidad.value === 'S' ? 'Accesible para personas con movilidad reducida':(registro.accesibilidad.value === 'N' ? 'No accesible para personas con movilidad reducida':registro.accesibilidad.value)) + '</p>' : '') + 
+                    break;
+                case 'evento':
+                    template = '<p>' +
+                        (registro.image ? '<img src="' + registro.image.value + '" class="pull-right" width="100"/>' : '') +
+                        (registro.comment ? registro.comment.value : '') +
+                        '</p>' +
+                        (registro.programa ? '<p>' + $rootScope.strings.detail.label.program + ': ' + registro.programa.value + '</p>' : '') +
+                        '<p>' +
+                        (registro.startDate ? ' ' + $rootScope.strings.detail.label.start_date + ': ' + $filter('date')(registro.startDate.value, 'dd-MM-yyyy') : '') +
+                        (registro.endDate ? ' ' + $rootScope.strings.detail.label.end_date + ': ' + $filter('date')(registro.endDate.value, 'dd-MM-yyyy') : '') +
+                        (registro.startTime ? ' ' + $rootScope.strings.detail.label.start_time + ': ' + registro.startTime.value : '') +
+                        (registro.endTime ? ' ' + $rootScope.strings.detail.label.end_time + ': ' + registro.endTime.value : '') +
+                        (registro.openingHours ? ' ' + $rootScope.strings.detail.label.opening_hours + ': ' + registro.openingHours.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.tipoEntrada ? $rootScope.strings.detail.label.accession + ': ' + registro.tipoEntrada.value : '') +
+                        (registro.price ? ' ' + $rootScope.strings.detail.label.price + ': ' + registro.price.value : '') +
+                        (registro.maxParticipantes ? $rootScope.strings.detail.label.capacity + ': ' + registro.maxParticipantes.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.url ? ' ' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a>' : '') +
+                        // TODO cuando esté bien cargado el lugar de realización
+                        (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') +
+                        (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value + '</a>' : '') +
+                        (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') +
+                        (registro.postCode ? ' ' + $rootScope.strings.detail.label.postal_code + ': ' + registro.postCode.value : '') +
+                        (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') +
+                        '</p>' +
+                        (registro.accesibilidad ? '<p>' + (registro.accesibilidad.value === 'S' ? 'Accesible para personas con movilidad reducida' : (registro.accesibilidad.value === 'N' ? 'No accesible para personas con movilidad reducida' : registro.accesibilidad.value)) + '</p>' : '') +
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
-                      break;
-                 case 'monumento':
-                       template = '<p>' + 
-                           (registro.datacion ? registro.datacion.value + '. ' : '') + 
-                           (registro.estilo ? registro.estilo.value + '. ' : '') + 
-                           (registro.comment ? registro.comment.value : '') + 
-                       '</p>' + 
-                       '<p>' + 
-                           (registro.horario ? $rootScope.strings.detail.label.opening_hours + '. ' + registro.horario.value : '') + 
-                           (registro.price ? ' ' + $rootScope.strings.detail.label.price + '. ' + registro.price.value : '') + 
-                           (registro.uso ? ' ' + $rootScope.strings.detail.label.use + '. ' + registro.uso.value : '') + 
-                       '</p>' + 
-                           (registro.puntosInteres ? '<p><strong>' + $rootScope.strings.detail.label.pois + '</strong>. ' + registro.puntosInteres.value + '</p>': '') + 
-                           (registro.detalleVisita ? '<p><strong>' + $rootScope.strings.detail.label.visit + '</strong>. ' + registro.detalleVisita.value + '</p>': '') + 
-                        '<p>' + 
-                           (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') + 
-                           (registro.fax ? ' ' + $rootScope.strings.detail.label.fax + ': ' + registro.fax.value : '') + 
-                           (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') + 
-                           (registro.datosAcceso ? ' ' + $rootScope.strings.detail.label.access + ': ' + registro.datosAcceso.value : '') + 
-                           (registro.foursquare ? ' ' + $rootScope.strings.detail.label.foursquare + ': ' + registro.foursquare.value : '') + 
-                       '</p>' + 
-                       (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
-                       (registro.photo ? '<div><img src="' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') + 
-                       (registro.latitud ? mapa : '');
-                     break;
-                 case 'alojamiento':
-                    template = '<p>' + 
-                            (registro.logo ? '<img src="//www.zaragoza.es' + registro.logo.value + '" class="pull-right"/>' : '') + 
-                            (registro.comment ? registro.comment.value : '') + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.numCamas ? registro.numCamas.value + ' camas ' : '') + 
-                            (registro.numHabitaciones ? ' ' + registro.numHabitaciones.value + ' habitaciones' : '') + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.url ? ' ' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a>' : '') + 
-                            (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') + 
-                            (registro.fax ? ' ' + $rootScope.strings.detail.label.fax + ': ' + registro.fax.value : '') + 
-                            (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value+ '</a>' : '') + 
-                            (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') + 
-                            (registro.postCode ? ' ' + $rootScope.strings.detail.label.postal_code + ': ' + registro.postCode.value : '') + 
-                            (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') + 
-                        '</p>' + 
-                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
-                        (registro.photo ? '<div><img src="//www.zaragoza.es' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') + 
+                    break;
+                case 'monumento':
+                    template = '<p>' +
+                        (registro.datacion ? registro.datacion.value + '. ' : '') +
+                        (registro.estilo ? registro.estilo.value + '. ' : '') +
+                        (registro.comment ? registro.comment.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.horario ? $rootScope.strings.detail.label.opening_hours + '. ' + registro.horario.value : '') +
+                        (registro.price ? ' ' + $rootScope.strings.detail.label.price + '. ' + registro.price.value : '') +
+                        (registro.uso ? ' ' + $rootScope.strings.detail.label.use + '. ' + registro.uso.value : '') +
+                        '</p>' +
+                        (registro.puntosInteres ? '<p><strong>' + $rootScope.strings.detail.label.pois + '</strong>. ' + registro.puntosInteres.value + '</p>' : '') +
+                        (registro.detalleVisita ? '<p><strong>' + $rootScope.strings.detail.label.visit + '</strong>. ' + registro.detalleVisita.value + '</p>' : '') +
+                        '<p>' +
+                        (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') +
+                        (registro.fax ? ' ' + $rootScope.strings.detail.label.fax + ': ' + registro.fax.value : '') +
+                        (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') +
+                        (registro.datosAcceso ? ' ' + $rootScope.strings.detail.label.access + ': ' + registro.datosAcceso.value : '') +
+                        (registro.foursquare ? ' ' + $rootScope.strings.detail.label.foursquare + ': ' + registro.foursquare.value : '') +
+                        '</p>' +
+                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') +
+                        (registro.photo ? '<div><img src="' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') +
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
-                     break;
+                    break;
+                case 'alojamiento':
+                    template = '<p>' +
+                        (registro.logo ? '<img src="//www.zaragoza.es' + registro.logo.value + '" class="pull-right"/>' : '') +
+                        (registro.comment ? registro.comment.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.numCamas && registro.numCamas.value > 0 ? registro.numCamas.value + ' camas ' : '') +
+                        (registro.numHabitaciones && registro.numHabitaciones.value > 0 ? ' ' + registro.numHabitaciones.value + ' habitaciones' : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.url ? ' ' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a>' : '') +
+                        (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') +
+                        (registro.fax ? ' ' + $rootScope.strings.detail.label.fax + ': ' + registro.fax.value : '') +
+                        (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value + '</a>' : '') +
+                        (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') +
+                        (registro.postCode ? ' ' + $rootScope.strings.detail.label.postal_code + ': ' + registro.postCode.value : '') +
+                        (registro.addressLocality && registro.addressLocality.value !== 'Zaragoza' ? ' ' + registro.addressLocality.value : '') +
+                        '</p>' +
+                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') +
+                        (registro.photo ? '<div><img src="//www.zaragoza.es' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') +
+                        // btnAddAgenda + 
+                        (registro.latitud ? mapa : '');
+                    break;
                 case 'recurso':
-                       template = '<p>' + 
-                            (registro.comment ? registro.comment.value : '') + 
-                            (registro.servicios ? registro.servicios.value : '') + 
-                        '</p>' + 
-                        (registro.url ? '<p>' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a></p>' : '') + 
-                        '<p>' + 
-                            (registro.horario ? $rootScope.strings.detail.label.opening_hours + '. ' + registro.horario.value : '') + 
-                            (registro.price ? ' ' + $rootScope.strings.detail.label.price + '. ' + registro.price.value : '') + 
-                        '</p>' + 
-                        '<p>' + 
-                            (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') + 
-                            (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value+ '</a>' : '') + 
-                            (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') + 
-                        '</p>' + 
-                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') + 
+                    template = '<p>' +
+                        (registro.comment ? registro.comment.value : '') +
+                        (registro.servicios ? registro.servicios.value : '') +
+                        '</p>' +
+                        (registro.url ? '<p>' + $rootScope.strings.detail.label.web_site + ': ' + '<a href="' + registro.url.value + '">' + registro.url.value + '</a></p>' : '') +
+                        '<p>' +
+                        (registro.horario ? $rootScope.strings.detail.label.opening_hours + '. ' + registro.horario.value : '') +
+                        (registro.price ? ' ' + $rootScope.strings.detail.label.price + '. ' + registro.price.value : '') +
+                        '</p>' +
+                        '<p>' +
+                        (registro.tel ? ' ' + $rootScope.strings.detail.label.phone + ': ' + registro.tel.value : '') +
+                        (registro.email ? ' ' + $rootScope.strings.detail.label.email + ': <a href="mailto:' + registro.email.value + '">' + registro.email.value + '</a>' : '') +
+                        (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') +
+                        '</p>' +
+                        (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') +
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
-                     break;
-                  case 'mapa-colaborativo':
-                  console.log(registro);
-                       template = '<p>' + registro.description + '</p>' +
+                    break;
+                case 'mapa-colaborativo':
+                    template = '<p>' + registro.description + '</p>' +
+                        (registro.link ? '<p>Sitio web: <a href="' + registro.link + '">' + registro.link + '</a></p>' : '') +
+
+                        // btnAddAgenda + 
                         (registro.latitud ? mapa : '');
-                     break;
-                     
+                    break;
+
                 default:
                     template = '<dl class="dl-horizontal">';
                     for (var prop in registro) {
-                        template = template + '<dt>' + $filter('propiedad')(prop) + '</dt>' + 
+                        template = template + '<dt>' + $filter('propiedad')(prop) + '</dt>' +
                             '<dd>' + $filter('valor')(registro[prop]) + '</dd>';
                     }
                     template = template + '</dl>';
                     break;
             }
-            return ' <md-content md-theme="orange">' + template + '</md-content>';
+            return ' <md-content>' + template + '</md-content>';
         };
 
         var linker = function(scope, element, attrs) {
@@ -167,21 +209,21 @@ angular.module('descubre.directives', [])
                     registro = value;
 
                     if (!registro.latitud && registro.geometry) {
-                      registro.latitud = {};
-                      registro.longitud = {};
-                      registro.latitud.value = registro.geometry.coordinates[1];
-                      registro.longitud.value = registro.geometry.coordinates[0];
+                        registro.latitud = {};
+                        registro.longitud = {};
+                        registro.latitud.value = registro.geometry.coordinates[1];
+                        registro.longitud.value = registro.geometry.coordinates[0];
                     }
 
                     if (registro.latitud && registro.longitud) {
 
                         scope.center = {
-                         lat: Math.round10(registro.latitud.value, -4),
-                         lng: Math.round10(registro.longitud.value, -4),
-                         zoom: 14
+                            lat: Math.round10(registro.latitud.value, -4),
+                            lng: Math.round10(registro.longitud.value, -4),
+                            zoom: 14
                         };
                         scope.markers = {
-                           main_marker: {
+                            main_marker: {
                                 lat: Math.round10(registro.latitud.value, -4),
                                 lng: Math.round10(registro.longitud.value, -4),
                                 focus: true,
@@ -232,12 +274,11 @@ angular.module('descubre.directives', [])
             restrict: "E",
             link: linker,
         };
-    })
-;
+    });
 
 
 // Closure
-(function(){
+(function() {
 
     /**
      * Decimal adjustment of a number.
@@ -289,10 +330,10 @@ angular.module('descubre.directives', [])
 
 
 if (!String.prototype.format) {
-  String.prototype.format = function() {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) { 
-      return typeof args[number] != 'undefined' ? args[number] : match;
-    });
-  };
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+            return typeof args[number] != 'undefined' ? args[number] : match;
+        });
+    };
 }

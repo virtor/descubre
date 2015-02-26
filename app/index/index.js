@@ -9,7 +9,7 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
     });
 }])
 
-.controller('IndexCtrl', ['$scope', 'Query', '$filter', '$mdSidenav', function($scope, Query, $filter, $mdSidenav) {
+.controller('IndexCtrl', ['$scope', 'Query', 'Agenda', '$filter', '$mdSidenav', function($scope, Query, Agenda, $filter, $mdSidenav) {
     $mdSidenav('left').close();
 
     $scope.actividades = [];
@@ -27,6 +27,15 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
         $scope.progresoCarga = $scope.progresoCarga + 50;
     });
 
+    $scope.addCalendar = function(e){
+    alert('asa');
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    Agenda.add($scope.detalle);
+  };
+
     // Query.list('SELECT distinct ?type ?uri ?title ?tenedores ?latitud ?longitud\
     //     WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>.\
     //     OPTIONAL {?uri rdfs:label  ?title.}\
@@ -41,7 +50,7 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
     // });
 
 }])
-.controller('DetalleController', ['$scope', 'Query', '$filter', function($scope, Query, $filter) {
+.controller('DetalleController', ['$scope', 'Query', 'Agenda', '$filter', function($scope, Query, Agenda, $filter) {
   /*
   $scope.claseParquimetro='';
   $scope.claseRestaurante='';
@@ -56,7 +65,6 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
   $scope.claseGasolinera=''; 
   $scope.claseMoto=''; 
   */
-  
   $scope.parquimetrosCercanos = function(){
      $scope.claseParquimetro='glyphicon glyphicon-refresh';
      Query.getApi('/recurso/urbanismo-infraestructuras/equipamiento/parquimetro?rows=30&fl=id,title,description,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {

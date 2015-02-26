@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ngSanitize','infinite-scroll'])
+angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ngSanitize','infinite-scroll', 'ngMaterial'])
  
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/facet/:categoria', {
@@ -13,90 +13,81 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
     $mdSidenav('left').close();
 
     var categoria = $routeParams.categoria;
-    var tipo = '';
     var faceta = '';
+    var queryFacet = '';
     var queryDefecto = '';
     var fq = '';
     $scope.busy = false;
     if (categoria === 'gastronomia') {
-      tipo = 'Restaurantes';
-      faceta = ['temas_smultiple'];
-      queryDefecto = '';
+      faceta = 'filter(?tipo="{0}") .';
+      queryFacet = query.faceta.gastronomy.facet;
+      queryDefecto = query.faceta.gastronomy.query;
       $scope.vocab = 'restaurante';
       $scope.titleh2 = $rootScope.strings.nav.gastronomy;
     } else if (categoria === 'agenda') {
-      tipo = 'Actividades';
-      faceta = ['temas_smultiple'];
-      queryDefecto = ' AND -temas_smultiple:("Cursos y Talleres") AND -temas_smultiple:("Bibliotecas")';
+      faceta = '?uri <http://www.w3.org/2006/vcard/ns#category> <{0}> .';
+      queryFacet = query.faceta.events.facet;
+      queryDefecto = query.faceta.events.query;
       $scope.vocab = 'evento';
       $scope.titleh2 = $rootScope.strings.nav.events;
     } else if (categoria === 'alojamiento') {
-      tipo = 'Alojamientos';
-      faceta = ['temas_smultiple'];
-      queryDefecto = '';
+      faceta = '?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#categoria> "{0}". ';
+      queryFacet = query.faceta.accommodation.facet;
+      queryDefecto = query.faceta.accommodation.query;
       $scope.vocab = 'alojamiento';
       $scope.titleh2 = $rootScope.strings.nav.accommodation;
     }
     var params = {};
     params.start = 0;
+    $scope.filtroFaceta = '';
     $scope.resultados = [];
     $scope.facetas = [];
-
+    params.continua = true;
     $scope.loadMore = function() {
-      if ($scope.busy) return;
-      $scope.busy = true;
-      Query.getSolr('*:*' + queryDefecto, tipo, faceta, fq, params.start, 50).then(function(resultados) {
-          $scope.resultados = $scope.resultados.concat(resultados.response.docs);
+      if ($scope.busy || !params.continua) {
+        $scope.busy = true;
+        return;
+      }
+      Query.list(queryDefecto.format($scope.filtroFaceta) + ' OFFSET ' + params.start + ' LIMIT 50').then(function(result) {
+        $scope.resultados = $scope.resultados.concat(result.results.bindings);
+        $scope.progresoCarga = $scope.progresoCarga + 50;
+        $scope.busy = false;
+        if (result.results.bindings.length > 0) {
           params.start += 50;
-          var facetas = [];
-          for(var key in resultados.facet_counts.facet_fields){
-            var faceta = {};
-            faceta.title = key;
-            faceta.valores = [];
-            var valor = {};
-            for (var i = 0; i < resultados.facet_counts.facet_fields[key].length ; i++) {
-              if (i % 2 == false) {
-                valor.title=resultados.facet_counts.facet_fields[key][i];
-              } else {
-                valor.badge=resultados.facet_counts.facet_fields[key][i];
-                faceta.valores.push(valor);
-                valor = {};
-              }
-            }
-            facetas.push(faceta);
-          }
-          $scope.facetas = facetas;
-          $scope.busy = false;
+          params.continua = true;
+        } else {
+          params.continua = false;
+        }
+      });
+
+      Query.list(queryFacet.format($scope.filtroFaceta)).then(function(result) {
+        $scope.facetas = result.results.bindings;
+        $scope.progresoCarga = $scope.progresoCarga + 50;
       });
     };
 
-    $scope.filtrarFaceta = function(faceta, valor) {
 
+    $scope.filtrarFaceta = function(valor) {
+      console.log(valor);
       if ($scope.busy) return;
-      fq = faceta + ':("' + valor + '")';
-      params.start = 0;
 
-      Query.getSolr('*:*' + queryDefecto, tipo, faceta, fq, params.start, 50).then(function(resultados) {
-          $scope.resultados = resultados.response.docs;
-          var facetas = [];
-          for(var key in resultados.facet_counts.facet_fields){
-            var faceta = {};
-            faceta.title = key;
-            faceta.valores = [];
-            var valor = {};
-            for (var i = 0; i < resultados.facet_counts.facet_fields[key].length ; i++) {
-              if (i % 2 == false) {
-                valor.title=resultados.facet_counts.facet_fields[key][i];
-              } else {
-                valor.badge=resultados.facet_counts.facet_fields[key][i];
-                faceta.valores.push(valor);
-                valor = {};
-              }
-            }
-            facetas.push(faceta);
-          }
-          $scope.facetas = facetas;
-      });
+      params.start = 0;
+      $scope.resultados = [];
+      $scope.facetas = [];
+      params.continua = true;
+      $scope.filtroFaceta = faceta.format(valor);
+      $scope.loadMore();
+
+    }
+     $scope.borrarFiltros = function() {
+      
+      params.start = 0;
+      $scope.resultados = [];
+      $scope.facetas = [];
+      params.continua = true;
+      $scope.busy=false;
+      $scope.filtroFaceta = '';
+      $scope.loadMore();
 
     }
 }]);

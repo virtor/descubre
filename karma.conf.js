@@ -22,11 +22,14 @@ module.exports = function(config) {
             'app/facet*/**/*.js',
             'app/sector*/**/*.js',
             'app/js/version*/**/*.js',
-            'app/js/services.js',
-            'app/js/directives.js',
-            'app/js/filters.js',
+            'app/js/services*.js',
+            'app/js/directives*.js',
+            'app/js/filters*.js',
             'app/bower_components/leaflet/dist/leaflet.js',
-            'app/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js'
+            'app/bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js',
+            'app/bower_components/angular-material/angular-material.min.css',
+            'app/bower_components/angular-bootstrap/ui-bootstrap.min.js',
+            'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
         ],
 
         autoWatch: true,
@@ -39,13 +42,38 @@ module.exports = function(config) {
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-jasmine',
-            'karma-junit-reporter'
+            'karma-coverage',
+            'karma-junit-reporter',
+            'karma-htmlfile-reporter'
         ],
 
         junitReporter: {
-            outputFile: 'test_out/unit.xml',
+            outputFile: 'test-results/unit.xml',
             suite: 'unit'
-        }
+        },
+        preprocessors: {
+            'app/{*.js,!(bower_components)/**/*.js}': 'coverage'
+        },
+
+        // test results reporter to use
+        // report on progress, collect coverage and junit reports
+        reporters: ['progress', 'coverage', 'junit', 'html'],
+        htmlReporter: {
+            outputFile: 'test-results/units.html'
+        },
+        //use cobertura coverage report for jenkins integration
+        coverageReporter: {
+            reporters: [
+                {
+                    type: 'cobertura',
+                    dir: 'test-results/'
+                },
+                {
+                    type: 'html',
+                    dir: 'test-results/'
+                }
+            ]
+        },
 
     });
 };

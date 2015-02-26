@@ -1,4 +1,4 @@
-/*'use strict';
+'use strict';
 
 describe('descubre.sector module', function() {
 var scope, ctrl, routeParams;
@@ -7,28 +7,15 @@ var scope, ctrl, routeParams;
 
   describe('sector controller', function(){
 
- //  beforeEach(inject(function(_$rootScope_, _$controller_,_$routeParams_){
- //        $rootScope = _$rootScope_;
- //        $scope = $rootScope.$new();
- //        $controller = _$controller_;
- //        $controller('SectorCtrl', {
- //    		'$rootScope': $rootScope,
- //    		'$scope': $scope,
- //    		'$routeParams': {
- //        		'idSector': 'Infancia'
- //    		}
-	// });
-
-
-
-  }));
 	beforeEach(inject(function ($rootScope) {
         scope = $rootScope.$new();
         routeParams = {};
+        $rootScope.strings = strings.es;
+	    $rootScope.query = query;
     }));
 
 	it('Debe cargar', inject(function ($controller) {
-	  routeParams.idSector = 'Infancia';
+	  routeParams.idSector = 'infancia';
 	  // console.log(routeParams);
 	  ctrl = $controller('SectorCtrl', {
 	    $scope: scope,
@@ -39,4 +26,4 @@ var scope, ctrl, routeParams;
 	}));
 
   });
-});*/
+});

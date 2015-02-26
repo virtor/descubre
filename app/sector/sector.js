@@ -1,5 +1,5 @@
 'use strict';
-angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros'])
+angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros','ui.bootstrap', 'ngMaterial'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/para/:idSector', {
@@ -11,6 +11,7 @@ angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros'])
 .controller('SectorCtrl', ['$scope', 'Query', '$filter', '$routeParams','$mdSidenav','$rootScope', function($scope, Query, $filter, $routeParams, $mdSidenav, $rootScope) {
   $mdSidenav('left').close();
 
+  $scope.isCollapsed = true;
 
 	var sector = $routeParams.idSector;
   var idSector = '';
@@ -32,11 +33,13 @@ angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros'])
   $scope.equipamientos=[]
   var params = {};
   params.startRecurso = 0;
+  params.continua = true;
 
   params.query = $rootScope.query.sector.events.format(idSectorActo);
   $scope.opt = 'event';
 
   $scope.mostrar = function(tipo, uri) {
+    $scope.isCollapsed = true;
     $scope.opt = tipo;
     if (angular.isDefined(uri)) {
       $scope.busy = true;
@@ -66,7 +69,8 @@ angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros'])
   }
 
   $scope.loadMoreRecurso = function() {
-    if ($scope.busy) {
+    if ($scope.busy || !params.continua) {
+      $scope.busy = true;
       return;
     }
     $scope.busy = true;
@@ -75,6 +79,9 @@ angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros'])
         $scope.equipamientos = $scope.equipamientos.concat(result.results.bindings);
         if (result.results.bindings.length > 0) {
           params.startRecurso += 50;
+          params.continua = true;
+        } else {
+          params.continua = false;
         }
 
       });

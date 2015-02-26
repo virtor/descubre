@@ -1,7 +1,7 @@
 <h2 id="actividades">{{strings.search.result}} <small>{{strings.search.query}}: {{consulta}}</small></h2>
 <div infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="0" infinite-scroll-parent="s">
 	<accordion close-others="false">
-	    <accordion-group ng-repeat="registro in resultado" heading="{{registro.title.value}}" is-open="registro.anyOldValue">
+	    <accordion-group ng-repeat="registro in resultado" elemento="{{registro}}" heading="{{registro.title.value}}" is-open="registro.anyOldValue">
 	      <accordion-heading>
 	          <strong>{{ registro.title.value }}</strong>          
 	        </accordion-heading>

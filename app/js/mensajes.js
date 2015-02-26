@@ -11,11 +11,16 @@ strings.es = {
         accommodation: 'Alojamiento',
         events: 'Actividades',
         resources: 'Recursos',
+        agenda: 'Agenda',
         search: 'Buscar'
     },
     index: {
         events: 'Actividades destacadas',
         monuments: 'Monumentos destacados'
+    },
+    facet: {
+        clear: 'Borrar filtro',
+        
     },
     search: {
         result: 'Resultado',
@@ -23,22 +28,49 @@ strings.es = {
     },
     sector: {
         youth: {
-            menu : [
-                {opt:'marcha', text:'Zonas Marcha', uri:'/recurso/mapas-colaborativos/134?srsname=wgs84&rows=200'},
-                {opt:'noche', text:'Noche', uri:'/recurso/mapas-colaborativos/125?srsname=wgs84&rows=200'},
-                {opt:'tomar', text:'Tomar Algo', uri:'/recurso/mapas-colaborativos/135?srsname=wgs84&rows=200'},
-                {opt:'envivo', text:'Música en vivo', uri:'/recurso/mapas-colaborativos/137?srsname=wgs84&rows=200'},
-                {opt:'zonasverdes', text:'Zonas verdes', uri:'/recurso/mapas-colaborativos/139?srsname=wgs84&rows=200'},
-                {opt:'compras', text:'De compras', uri:'/recurso/mapas-colaborativos/131?srsname=wgs84&rows=200'},
+            menu: [{
+                    opt: 'marcha',
+                    text: 'Zonas Marcha',
+                    uri: '/recurso/mapas-colaborativos/134?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'noche',
+                    text: 'Noche',
+                    uri: '/recurso/mapas-colaborativos/125?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'tomar',
+                    text: 'Tomar Algo',
+                    uri: '/recurso/mapas-colaborativos/135?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'envivo',
+                    text: 'Música en vivo',
+                    uri: '/recurso/mapas-colaborativos/137?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'zonasverdes',
+                    text: 'Zonas verdes',
+                    uri: '/recurso/mapas-colaborativos/139?srsname=wgs84&rows=200'
+                }, {
+                    opt: 'compras',
+                    text: 'De compras',
+                    uri: '/recurso/mapas-colaborativos/131?srsname=wgs84&rows=200'
+                },
                 // {opt:'bailar', text:'Para bailar', uri:'/recurso/mapas-colaborativos/129?srsname=wgs84&rows=200'},
-                {opt:'tapas', text:'De tapas', uri:'/recurso/mapas-colaborativos/130?srsname=wgs84&rows=200'},
+                {
+                    opt: 'tapas',
+                    text: 'De tapas',
+                    uri: '/recurso/mapas-colaborativos/130?srsname=wgs84&rows=200'
+                },
                 // {opt:'accion', text:'Acción', uri:'/recurso/mapas-colaborativos/127?srsname=wgs84&rows=200'},
-                {opt:'ocio', text:'Ocio', uri:'/recurso/mapas-colaborativos/136?srsname=wgs84&rows=200'}
-              ]
+                {
+                    opt: 'ocio',
+                    text: 'Ocio',
+                    uri: '/recurso/mapas-colaborativos/136?srsname=wgs84&rows=200'
+                }
+            ]
         }
     },
     detail: {
         near: 'Cerca de aquí',
+        addAgenda: 'Añadir a agenda',
         events: 'Actividades',
         monuments: 'Monumentos',
         gastronomy: 'Restaurantes',
@@ -82,7 +114,7 @@ strings.es = {
 
 var query = {
     /*jshint multistr: true */
-    search: 'SELECT DISTINCT ?uri ?title \
+    search: 'SELECT DISTINCT ?uri ?title min(?latitud) as ?latitud min(?longitud) as ?longitud \
         WHERE { \
          ?uri ?s  ?p. \
          ?uri rdfs:label  ?title. \
@@ -90,7 +122,8 @@ var query = {
          ?geo geo:lat ?latitud. \
          ?geo geo:long ?longitud. \
          FILTER (REGEX(STR(?p), "{0}", "i")) \
-        } OFFSET {1} LIMIT 50',
+        } group by ?uri ?title \
+        OFFSET {1} LIMIT 50',
     filter: {
         evento: 'SELECT distinct ?uri ?title ?latitud ?tipo ?subEvent ?longitud ?modified ?comment ?price ?accesible ?accesibilidad ?programa ?image ?maxParticipantes ?startDate ?endDate ?startTime ?endTime ?horario ?url\
                 WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#Evento>.\
@@ -118,7 +151,7 @@ var query = {
                 ?uri dcterms:identifier "{0}".\
                 }',
         alojamiento: 'PREFIX locn: <http://www.w3.org/ns/locn#>\
-                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?accesibilidad ?numCamas ?numHabitaciones ?streetAdr ?addressLocality ?postCode ?email ?socioHoreca ?categoria ?locality ?logo ?photo ?url\
+                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?accesibilidad ?numCamas ?numHabitaciones ?streetAdr ?addressLocality ?postCode ?email ?socioHoreca ?categoria ?logo ?photo ?url\
                 WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
@@ -169,9 +202,8 @@ var query = {
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        monumento:'PREFIX locn: <http://www.w3.org/ns/locn#>\
-                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
-                WHERE { ?uri a <http://idi.fundacionctic.org/cruzar/turismo#Monumento>.\
+        monumento: 'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
+                WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#LugarInteresTuristico>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
@@ -193,8 +225,7 @@ var query = {
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        recurso: 'PREFIX locn: <http://www.w3.org/ns/locn#>\
-                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?email ?url ?comment ?servicios ?accesibilidad ?streetAdr ?horario ?price  \
+        recurso: 'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?email ?url ?comment ?servicios ?accesibilidad ?streetAdr ?horario ?price  \
                 WHERE { ?uri a <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/equipamiento>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
@@ -216,49 +247,8 @@ var query = {
                 }'
     },
     index: {
-        actividades : 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
-        SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo\
-        WHERE { ?uri a acto:Evento. \
-           OPTIONAL{ ?uri rdfs:label  ?title}.\
-           OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
-           OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.}\
-           OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.}\
-           OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.}\
-           OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.}\
-           OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
-           OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
-           OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
-           ?uri acto:destacada "true".\
-           ?uri acto:orden ?orden.\
-        } ORDER BY ASC(?orden) LIMIT 20',
-        monumentos: 'PREFIX monumento: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
-        SELECT DISTINCT ?uri ?title ?tipo \
-        WHERE { ?uri a monumento:LugarInteresTuristico. \
-           OPTIONAL{ ?uri rdfs:label  ?title}.\
-           ?uri monumento:estiloArtistico ?tipo. \
-           ?uri monumento:destacado "S".\
-        }'
-    },
-    sector: {
-        /*events: 'SELECT DISTINCT ?uri ?title ?latitud ?longitud (group_concat(distinct ?tipo;separator=",")) as ?tipo \
-            WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#Evento>. \
-                OPTIONAL{ ?uri rdfs:label  ?title}. \
-                OPTIONAL {?uri geo:geometry ?geo. \
-                    ?geo geo:lat ?latitud. \
-                    ?geo geo:long ?longitud \
-                }. \
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category> ?tipoInt. \
-                    ?tipoInt skos:broader ?tipotema. \
-                    ?tipotema skos:prefLabel ?tipo \
-                }. \
-                ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/cultura-ocio/poblacion-destinataria/evento-zaragoza/{0}> \
-            } \
-            group by ?uri ?title ?latitud ?longitud\
-            order by ?title ',
-            */
-
-        events:'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
-            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo\
+        actividades: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
             WHERE { ?uri a acto:Evento. \
                OPTIONAL{ ?uri rdfs:label  ?title}.\
                OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
@@ -269,17 +259,138 @@ var query = {
                OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
                OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.}\
+               ?uri acto:destacada "true".\
+               ?uri acto:orden ?orden.\
+            } group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?orden \
+            ORDER BY ASC(?orden) LIMIT 20',
+        monumentos: 'PREFIX monumento: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
+            SELECT DISTINCT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a monumento:LugarInteresTuristico. \
+               OPTIONAL{ ?uri rdfs:label  ?title}.\
+               ?uri monumento:estiloArtistico ?tipo. \
+               ?uri monumento:destacado "S".\
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.}\
+            } group by ?uri ?title ?tipo'
+    },
+    faceta: {
+
+        events: {
+            query: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#> \
+            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a acto:Evento. \
+               OPTIONAL{ ?uri rdfs:label ?title}. \
+               OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.} \
+               OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.} \
+               OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.} \
+               OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.} \
+               OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.} \
+               OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.} \
+               OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.} \
+               OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.} \
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.} \
+            	bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
+				bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
+            	bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
+            	bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
+				filter(?diff >= 0) . \
+				{0} \
+            } \
+            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?startFixed ?diff \
+            order by asc(?startFixed) asc(?diff)',
+
+            facet: 'SELECT ?urifaceta ?faceta COUNT(?faceta) as ?numero \
+            WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#Evento>. \
+                    ?uri <http://www.w3.org/2006/vcard/ns#category> ?urifaceta. \
+                    ?urifaceta <http://www.w3.org/2004/02/skos/core#prefLabel> ?faceta. \
+                    {0}\
+            } \
+            GROUP BY ?urifaceta ?faceta'
+        },
+        gastronomy: {
+            query: 'SELECT DISTINCT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>. \
+               OPTIONAL{ ?uri rdfs:label  ?title}. \
+               OPTIONAL {?uri <http://www.zaragoza.es/skos/vocab/tenedores> ?tenedores.} \
+               bind(if(bound(?tenedores),concat(?tenedores," tenedor(es)"),"Restaurante") as ?tipo) . \
+               {0} \
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.} \
+            } group by ?uri ?title ?tipo \
+            order by desc(?tipo)',
+
+            facet: 'SELECT ?faceta COUNT(?faceta) as ?numero \
+            WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>. \
+                optional{?uri <http://www.zaragoza.es/skos/vocab/tenedores> ?tenedores.} \
+				bind(if(bound(?tenedores),concat(?tenedores," tenedor(es)"),"Restaurante") as ?faceta) . \
+				{0} \
+            } \
+            GROUP BY ?faceta'
+        },
+        accommodation: {
+            query: 'PREFIX locn: <http://www.w3.org/ns/locn#> \
+            SELECT DISTINCT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
+            WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>. \
+               OPTIONAL{ ?uri rdfs:label  ?title}. \
+               OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#categoria> ?tipo.} \
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.} \
+               {0} \
+            } group by ?uri ?title ?tipo \
+            order by desc(?tipo)',
+
+            facet: 'SELECT ?faceta COUNT(?faceta) as ?numero \
+                WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>. \
+                ?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#categoria> ?faceta. \
+                {0}\
+                } \
+                GROUP BY ?faceta'
+        }
+    },
+
+    sector: {
+
+        events: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud\
+            WHERE { ?uri a acto:Evento. \
+               OPTIONAL{ ?uri rdfs:label  ?title}.\
+               OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
+               OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.}\
+               OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.}\
+               OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.}\
+               OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.}\
+               OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
+               OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
+               OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
+               OPTIONAL {?uri geo:geometry ?geo. \
+                    ?geo geo:lat ?latitud. \
+                    ?geo geo:long ?longitud.}\
                ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/cultura-ocio/poblacion-destinataria/evento-zaragoza/{0}> \
             }\
+            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo \
             order by ?startDate',
-        resources: 'SELECT DISTINCT ?uri ?title (group_concat(distinct ?tipo;separator=",")) as ?tipo \
-              WHERE { ?uri a <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/equipamiento>. \
-                  OPTIONAL{ ?uri rdfs:label  ?title}. \
-                  ?uri <http://www.w3.org/2006/vcard/ns#category> ?tipoInt. \
-                  ?tipoInt rdfs:label ?tipo. \
-                  ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/clase-persona/{0}> \
-                  } \
-              group by ?uri ?title ?latitud ?longitud \
-              order by ?title '
-        }
+        resources: 'SELECT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud\
+            {\
+                SELECT DISTINCT ?uri ?title (group_concat(distinct ?tipo;separator=",")) as ?tipo ?latitud ?longitud\
+                  WHERE { ?uri a <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/equipamiento>. \
+                      OPTIONAL{ ?uri rdfs:label  ?title}. \
+                      ?uri <http://www.w3.org/2006/vcard/ns#category> ?tipoInt. \
+                      ?tipoInt rdfs:label ?tipo. \
+                      OPTIONAL {?uri geo:geometry ?geo. \
+                        ?geo geo:lat ?latitud. \
+                        ?geo geo:long ?longitud.}\
+                      ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/clase-persona/{0}> \
+                      } \
+                  group by ?uri ?title ?latitud ?longitud \
+                  order by ?title\
+            }group by ?uri ?title ?tipo'
+    }
 };

@@ -9,6 +9,8 @@ describe('descubre.facet module', function() {
   	beforeEach(inject(function ($rootScope, $sanitize) {
         scope = $rootScope.$new();
         sanitize = $sanitize;
+        $rootScope.strings = strings.es;
+        $rootScope.query = query;
     }));
 
     it('Tiene que cargar datos de actividades', inject(function($controller) {

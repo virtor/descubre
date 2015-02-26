@@ -1,4 +1,4 @@
-/*'use strict';
+'use strict';
 
 describe('descubre.index module', function() {
   var scope, ctrl, sanitize;
@@ -9,6 +9,8 @@ describe('descubre.index module', function() {
   	beforeEach(inject(function ($rootScope, $sanitize) {
         scope = $rootScope.$new();
         sanitize = $sanitize;
+        $rootScope.strings = strings.es;
+        $rootScope.query = query;
     }));
 
     it('Tiene que cargar datos de actividades', inject(function($controller) {
@@ -23,4 +25,4 @@ describe('descubre.index module', function() {
     }));
 
   });
-});*/
+});
