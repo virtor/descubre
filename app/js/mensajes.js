@@ -247,23 +247,27 @@ var query = {
                 }'
     },
     index: {
-        actividades: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+        actividades: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#> \
+            PREFIX s: <http://schema.org/> \
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
+            PREFIX ns: <http://www.w3.org/2006/vcard/ns#> \
             SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
             WHERE { ?uri a acto:Evento. \
                OPTIONAL{ ?uri rdfs:label  ?title}.\
-               OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
-               OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.}\
-               OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.}\
-               OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.}\
-               OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.}\
-               OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
-               OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
-               OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
+               OPTIONAL {?uri s:subEvent ?subEvent.}\
+               OPTIONAL {?subEvent s:startDate ?startDate.}\
+               OPTIONAL {?subEvent s:endDate ?endDate.}\
+               OPTIONAL {?subEvent s:startTime ?startTime.}\
+               OPTIONAL {?subEvent s:endTime ?endTime.}\
+               OPTIONAL {?subEvent s:openingHours ?horario.}\
+               OPTIONAL {?uri skos:broader/skos:prefLabel  ?tema.}\
+               OPTIONAL {?uri ns:category/skos:prefLabel  ?subtema.}\
                OPTIONAL {?uri geo:geometry ?geo. \
                     ?geo geo:lat ?latitud. \
                     ?geo geo:long ?longitud.}\
                ?uri acto:destacada "true".\
                ?uri acto:orden ?orden.\
+               bind (CONCAT(?tema, " ", ?subtema) AS ?tipo)\
             } group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?orden \
             ORDER BY ASC(?orden) LIMIT 20',
         monumentos: 'PREFIX monumento: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
@@ -280,35 +284,44 @@ var query = {
     faceta: {
 
         events: {
-            query: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#> \
+            query: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+            PREFIX s: <http://schema.org/>\
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
+            PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
             SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
             WHERE { ?uri a acto:Evento. \
-               OPTIONAL{ ?uri rdfs:label ?title}. \
-               OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.} \
-               OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.} \
-               OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.} \
-               OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.} \
-               OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.} \
-               OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.} \
-               OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.} \
-               OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.} \
-               OPTIONAL {?uri geo:geometry ?geo. \
+                OPTIONAL{ ?uri rdfs:label ?title}. \
+                OPTIONAL {?uri s:subEvent ?subEvent.} \
+                OPTIONAL {?subEvent s:startDate ?startDate.} \
+                OPTIONAL {?subEvent s:endDate ?endDate.} \
+                OPTIONAL {?subEvent s:startTime ?startTime.} \
+                OPTIONAL {?subEvent s:endTime ?endTime.} \
+                OPTIONAL {?subEvent s:openingHours ?horario.} \
+                OPTIONAL {?uri skos:broader/skos:prefLabel  ?tema.}\
+                OPTIONAL {?uri ns:category/skos:prefLabel  ?subtema.}\
+                bind (CONCAT(?tema, " ", ?subtema) AS ?tipo).\
+                OPTIONAL {?uri geo:geometry ?geo. \
                     ?geo geo:lat ?latitud. \
                     ?geo geo:long ?longitud.} \
-            	bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
-				bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
-            	bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
-            	bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
-				filter(?diff >= 0) . \
-				{0} \
-            } \
+                bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
+                bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
+                bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
+                bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
+                filter(?diff >= 0) . \
+                filter(!strstarts(str(?tema), "Cursos") ).\
+                {0} \
+            }\
             group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?startFixed ?diff \
             order by asc(?startFixed) asc(?diff)',
 
-            facet: 'SELECT ?urifaceta ?faceta COUNT(?faceta) as ?numero \
-            WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#Evento>. \
-                    ?uri <http://www.w3.org/2006/vcard/ns#category> ?urifaceta. \
-                    ?urifaceta <http://www.w3.org/2004/02/skos/core#prefLabel> ?faceta. \
+            facet: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+            PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
+            SELECT ?urifaceta ?faceta COUNT(?faceta) as ?numero \
+            WHERE { ?uri a acto:Evento. \
+                    ?uri skos:broader ?urifaceta. \
+                    ?urifaceta skos:prefLabel ?faceta. \
+                    filter(!strstarts(str(?faceta), "Cursos") ).\
                     {0}\
             } \
             GROUP BY ?urifaceta ?faceta'
@@ -359,24 +372,34 @@ var query = {
     sector: {
 
         events: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
-            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud\
+            PREFIX s: <http://schema.org/>\
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
+            PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+            SELECT DISTINCT ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud \
             WHERE { ?uri a acto:Evento. \
-               OPTIONAL{ ?uri rdfs:label  ?title}.\
-               OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
-               OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.}\
-               OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.}\
-               OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.}\
-               OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.}\
-               OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
-               OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipoInt.}\
-               OPTIONAL {?tipoInt <http://www.w3.org/2004/02/skos/core#prefLabel>  ?tipo.}\
-               OPTIONAL {?uri geo:geometry ?geo. \
+                OPTIONAL{ ?uri rdfs:label ?title}. \
+                OPTIONAL {?uri s:subEvent ?subEvent.} \
+                OPTIONAL {?subEvent s:startDate ?startDate.} \
+                OPTIONAL {?subEvent s:endDate ?endDate.} \
+                OPTIONAL {?subEvent s:startTime ?startTime.} \
+                OPTIONAL {?subEvent s:endTime ?endTime.} \
+                OPTIONAL {?subEvent s:openingHours ?horario.} \
+                OPTIONAL {?uri skos:broader/skos:prefLabel  ?tema.}\
+                OPTIONAL {?uri ns:category/skos:prefLabel  ?subtema.}\
+                bind (CONCAT(?tema, " ", ?subtema) AS ?tipo).\
+                OPTIONAL {?uri geo:geometry ?geo. \
                     ?geo geo:lat ?latitud. \
-                    ?geo geo:long ?longitud.}\
-               ?uri <http://schema.org/typicalAgeRange> <http://www.zaragoza.es/api/recurso/cultura-ocio/poblacion-destinataria/evento-zaragoza/{0}> \
+                    ?geo geo:long ?longitud.} \
+                bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
+                bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
+                bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
+                bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
+                filter(?diff >= 0) . \
+                filter(!strstarts(str(?tema), "Cursos") ).\
+                ?uri s:typicalAgeRange <http://www.zaragoza.es/api/recurso/cultura-ocio/poblacion-destinataria/evento-zaragoza/{0}> \
             }\
-            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo \
-            order by ?startDate',
+            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?startFixed ?diff \
+            order by asc(?startFixed) asc(?diff)',
         resources: 'SELECT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud\
             {\
                 SELECT DISTINCT ?uri ?title (group_concat(distinct ?tipo;separator=",")) as ?tipo ?latitud ?longitud\

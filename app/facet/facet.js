@@ -25,7 +25,7 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
       $scope.vocab = 'restaurante';
       $scope.titleh2 = $rootScope.strings.nav.gastronomy;
     } else if (categoria === 'agenda') {
-      faceta = '?uri <http://www.w3.org/2006/vcard/ns#category> <{0}> .';
+      faceta = '?uri skos:broader <{0}> .';
       queryFacet = query.faceta.events.facet;
       queryDefecto = query.faceta.events.query;
       $scope.vocab = 'evento';
