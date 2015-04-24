@@ -266,7 +266,8 @@ var query = {
                     ?geo geo:lat ?latitud. \
                     ?geo geo:long ?longitud.}\
                ?uri acto:destacada "true".\
-               ?uri acto:orden ?orden.\
+               ?uri acto:orden ?ordenInterno.\
+               bind (xsd:int(?ordenInterno) as ?orden)\
                bind (CONCAT(?tema, " ", ?subtema) AS ?tipo)\
             } group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?orden \
             ORDER BY ASC(?orden) LIMIT 20',
