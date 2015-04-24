@@ -134,7 +134,7 @@ angular.module('descubre.directives', [])
                         (registro.fax ? ' ' + $rootScope.strings.detail.label.fax + ': ' + registro.fax.value : '') +
                         (registro.streetAdr ? '</p><p>' + $rootScope.strings.detail.label.address + ': ' + registro.streetAdr.value : '') +
                         (registro.datosAcceso ? ' ' + $rootScope.strings.detail.label.access + ': ' + registro.datosAcceso.value : '') +
-                        (registro.foursquare ? ' ' + $rootScope.strings.detail.label.foursquare + ': ' + registro.foursquare.value : '') +
+                        //(registro.foursquare ? ' ' + $rootScope.strings.detail.label.foursquare + ': ' + registro.foursquare.value : '') +
                         '</p>' +
                         (registro.accesibilidad ? '<p>' + registro.accesibilidad.value + '</p>' : '') +
                         (registro.photo ? '<div><img src="' + registro.photo.value + '" height="100" class="center-block"/></div>' : '') +
