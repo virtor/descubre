@@ -57,6 +57,7 @@ angular.module('descubre.sector', ['ngRoute', 'descubre.services', 'filtros','ui
       });
     } else {
       $scope.busy = false;
+      params.continua = true;
       if (tipo==='event') {
         params.query = $rootScope.query.sector.events.format(idSectorActo);
       } else {

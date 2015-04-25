@@ -27,21 +27,29 @@ describe('index', function() {
 
     });
 
+    it('debe mostrar alojamientos cercanos', function() {
+        var btnAlojamiento = element.all(by.css('[ng-view] .panel-body #btnAlojamientoCercano')).first();        
+        btnAlojamiento.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(by.model('markers')).toBeDefined();
+        });
+    });
+
+    it('debe poder agregarse el elemento a la Agenda', function() {
+        var btnAddCalendar = element.all(by.css('[ng-view] .btnAddCalendar')).first();
+        btnAddCalendar.click().then(function() {
+            expect(browser.executeScript("sessionStorage.getItem('items');")).toBeDefined();
+        });
+    });
+
 	it('debe mostrar el detalle de un monumento', function() {
-       var accordion = element.all(by.css('[ng-view] #acordeon_mon > .panel-title')).first();
+       var accordion = element.all(by.css('[ng-view] #acordeon_mon .panel-title')).first();
 		accordion.click().then(function() {
 			expect(element.all(by.css('[ng-view] #acordeon_mon .panel-body')).first().isPresent()).toBeTruthy();
 			expect(element.all(by.css('[ng-view] #acordeon_mon .panel-body .angular-leaflet-map')).first().isPresent()).toBeTruthy();
 		}); 
     });
 
-	it('debe mostrar recursos cercanos', function() {
-    	fail();
-    });
-
-    it('debe poder agregarse el elemento a la Agenda', function() {
-        fail();
-    });
 
 });
 
@@ -53,8 +61,8 @@ describe('faceta', function() {
     it('debe mostrar actividades y sus facetas cuando el usuario navega hasta facet/agenda', function() {
         expect(element.all(by.css('[ng-view] h2')).first().getText()).
         	toMatch(/Actividades/);
+        expect(element.all(by.repeater('dato in facetas')).count()).toBeGreaterThan(0);
         expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
-        expect(element.all(by.repeater('faceta in facetas')).count()).toBeGreaterThan(0);
     });
 
 });

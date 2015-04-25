@@ -37,15 +37,12 @@ angular.module('descubre.directives', [])
         var registro;
         var getTemplate = function(contentType) {
             /*jshint multistr: true */
-            // var btnAddAgenda = '<md-button ng-click="addCalendar()" class="pull-right md-fab md-warn" aria-label="' + $rootScope.strings.detail.addAgenda + '">\
-            //               <span class="glyphicon glyphicon-calendar"></span>\
-            //             </md-button>';
             var mapa = '<leaflet center="center" markers="markers" height="280px" style="width:98%" layers="layers" geojson="geojson"></leaflet>\
                         ' + $rootScope.strings.detail.near + ':<br/> \
-                        <button ng-click="actosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseActo" ng-class="claseActo"></span>' + $rootScope.strings.detail.events + '</button>\
-                        <button ng-click="monumentosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseMonumento" ng-class="claseMonumento"></span>' + $rootScope.strings.detail.monuments + '</button>\
-                        <button ng-click="restaurantesCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseRestaurante" ng-class="claseRestaurante"></span> ' + $rootScope.strings.detail.gastronomy + '</button>\
-                        <button ng-click="alojamientosCercanos()" class="btn btn-primary btn-xs"><span ng-show="claseAlojamiento" ng-class="claseAlojamiento"></span>' + $rootScope.strings.detail.accommodation + '</button>\
+                        <button ng-click="actosCercanos()" id="btnActoCercano" class="btn btn-primary btn-xs"><span ng-show="claseActo" ng-class="claseActo"></span>' + $rootScope.strings.detail.events + '</button>\
+                        <button ng-click="monumentosCercanos()" id="btnMonumentoCercano" class="btn btn-primary btn-xs"><span ng-show="claseMonumento" ng-class="claseMonumento"></span>' + $rootScope.strings.detail.monuments + '</button>\
+                        <button ng-click="restaurantesCercanos()" id="btnRestauranteCercano" class="btn btn-primary btn-xs"><span ng-show="claseRestaurante" ng-class="claseRestaurante"></span> ' + $rootScope.strings.detail.gastronomy + '</button>\
+                        <button ng-click="alojamientosCercanos()" id="btnAlojamientoCercano" class="btn btn-primary btn-xs"><span ng-show="claseAlojamiento" ng-class="claseAlojamiento"></span>' + $rootScope.strings.detail.accommodation + '</button>\
                         <div class="btn-group dropup">\
                             <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
                                 ' + $rootScope.strings.detail.more + ' <span class="caret"></span>\
