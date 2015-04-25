@@ -28,9 +28,9 @@ Instalar webdriver para los tests de integración
 
 `$ npm run update-webdriver`
 
-### lanzar servidor para angularjs == npm start
+### lanzar servidor para angularjs 
 
-`$ ./node_modules/http-server/bin/http-server -a localhost -p 8000 -c-1`
+`$ npm start` o `$ ./node_modules/http-server/bin/http-server -a localhost -p 8000 -c-1`
 
 
 ### lanzar en modo test 
