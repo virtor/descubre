@@ -6,3 +6,5 @@ tmp
 .tmp
 .DS_Store
 .idea
+e2e-results
+test-results
