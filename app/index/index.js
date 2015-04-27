@@ -27,7 +27,7 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
         $scope.progresoCarga = $scope.progresoCarga + 50;
     });
 
-    $scope.addCalendar = function(e){
+/*    $scope.addCalendar = function(e){
     alert('asa');
     if (e) {
       e.preventDefault();
@@ -35,7 +35,7 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
     }
     Agenda.add($scope.detalle);
   };
-
+*/
     // Query.list('SELECT distinct ?type ?uri ?title ?tenedores ?latitud ?longitud\
     //     WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>.\
     //     OPTIONAL {?uri rdfs:label  ?title.}\

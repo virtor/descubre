@@ -51,6 +51,33 @@ describe('queryDetalle', function() {
 });
 
 
+describe('getDate', function() {
+  it('debe obtener la fecha de un registro',
+      inject(function(getDateFilter) {
+
+    var registro = {date:'21-12-2014'};
+    expect(getDateFilter(registro)).toEqual(registro.date);
+
+    registro = {date:{value:'22-12-2014'}};
+    expect(getDateFilter(registro)).toEqual(registro.date.value);
+
+
+    registro = {startDate:'23-12-2014'};
+    expect(getDateFilter(registro)).toEqual(registro.startDate);
+    registro = {startDate:{value:'24-12-2014'}};
+    expect(getDateFilter(registro)).toEqual(registro.startDate.value);
+
+    registro = {endDate:'25-12-2014'};
+    expect(getDateFilter(registro)).toEqual(registro.endDate);
+    registro = {endDate:{value:'26-12-2014'}};
+    expect(getDateFilter(registro)).toEqual(registro.endDate.value);
+
+    registro = {valorErroneo:'20-12-2014'};
+    expect(getDateFilter(registro)).toBeUndefined();
+    
+  }));
+});
+
 describe('valor', function() {
   it('debe obtener el valor de un objeto',
       inject(function(valorFilter) {

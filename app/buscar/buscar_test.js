@@ -28,34 +28,16 @@ describe('descubre.sector module', function() {
         }));
 
         it('Debe cargar', inject(function($controller) {
+            var $scope = {};
             routeParams.consulta = 'restaurante cachirulo';
             ctrl = $controller('BuscarCtrl', {
-                $scope: scope,
+                $scope: $scope,
                 $routeParams: routeParams
             });
 
             expect(ctrl).toBeDefined();
-        }));
-
-        it('Debe ejecutar loadMore al hacer scroll', inject(function($controller) {
-            routeParams.consulta = 'cachirulo';
-            ctrl = $controller('BuscarCtrl', {
-                $scope: scope,
-                $routeParams: routeParams
-            });
-            console.log(scope.loadMore);
-			scope.loadMore().then(function(){
-				console.log("LELGA");
-			});
-            console.log("ANTES");
-            console.log(scope.resultado);
-            console.log("DESPUES");
-            element.scrollHeight = 1400;
-            // spyOn(scope, "loadMore").andCallThrough();
-            // window.scrollTo(0, 1400);
-            // expect(ctrl.loadMore).toHaveBeenCalled();
-
-            // expect($scope.limit).toBe(3); // Logs: Expected 2 to be 3. - so loadMore() have not called
+            $scope.loadMore();
+            expect($scope.resultado).toBeDefined();
         }));
 
     });

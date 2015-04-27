@@ -68,7 +68,6 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
 
 
     $scope.filtrarFaceta = function(valor) {
-      console.log(valor);
       if ($scope.busy) return;
 
       params.start = 0;
@@ -80,7 +79,6 @@ angular.module('descubre.facet', ['ngRoute', 'descubre.services', 'filtros', 'ng
 
     }
      $scope.borrarFiltros = function() {
-      
       params.start = 0;
       $scope.resultados = [];
       $scope.facetas = [];

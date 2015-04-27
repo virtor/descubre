@@ -14,9 +14,28 @@ var scope, ctrl, routeParams;
 	    $rootScope.query = query;
     }));
 
-	it('Debe cargar', inject(function ($controller) {
+	it('Debe cargar infancia', inject(function ($controller) {
 	  routeParams.idSector = 'infancia';
-	  // console.log(routeParams);
+	  ctrl = $controller('SectorCtrl', {
+	    $scope: scope,
+	    $routeParams: routeParams
+	  });
+
+	  expect(ctrl).toBeDefined();
+	}));
+
+	it('Debe cargar jovenes', inject(function ($controller) {
+	  routeParams.idSector = 'jovenes';
+	  ctrl = $controller('SectorCtrl', {
+	    $scope: scope,
+	    $routeParams: routeParams
+	  });
+
+	  expect(ctrl).toBeDefined();
+	}));
+
+	it('Debe cargar mayores', inject(function ($controller) {
+	  routeParams.idSector = 'mayores';
 	  ctrl = $controller('SectorCtrl', {
 	    $scope: scope,
 	    $routeParams: routeParams

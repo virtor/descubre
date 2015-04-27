@@ -26,7 +26,6 @@ angular.module('descubre.buscar', ['ngRoute', 'descubre.services', 'filtros', 'n
     $scope.resultado = [];
     $scope.loadMore = function() {
         if ($scope.busy || !params.continua) return;
-
         $scope.busy = true;
         Query.list($rootScope.query.search.format(cons, params.start)).then(function(result) {
             $scope.busy = false;
