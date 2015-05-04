@@ -32,7 +32,7 @@ config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThem
             redirectTo: '/index'
         });
 
-    }]).controller('MenuCtrl', ['$scope', '$mdSidenav', '$location', 'Agenda', function($scope, $mdSidenav, $location, Agenda) {
+    }]).controller('MenuCtrl', ['$scope', '$mdSidenav','$mdDialog', '$location', 'Agenda', function($scope, $mdSidenav, $mdDialog, $location, Agenda) {
 
         $scope.openMenu = function() {
             $mdSidenav('left').open();
@@ -49,15 +49,33 @@ config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThem
           Agenda.remove(id, fecha, tipo);
           $scope.items = Agenda.list();
         };
-        $scope.updateAgenda = function(id, fecha, tipo) {
-          var registro = {};
-          registro.uri = 'http://aasdasd';
-          registro.title='titulo';
-          registro.date='2015-02-25';
-          registro.startTime='16:00';
-          registro.endTime='18:00';
-          Agenda.update(id, fecha, tipo, registro);
-          $scope.items = Agenda.list();
+        $scope.updateAgenda = function(ev, id, fecha, tipo) {
+
+            $mdDialog.show({
+              controller: DialogCtrl,
+              templateUrl: 'index/edit.tmpl.html',
+              targetEvent: ev,
+              locals: {
+                id: id,
+                fecha: fecha,
+                tipo: tipo,
+              }
+            })
+            .then(function(registro) {
+              // var registro = {};
+              // registro.uri = 'http://aasdasd';
+              // registro.title='titulo';
+              // registro.date='2015-02-25';
+              // registro.startTime='16:00';
+              // registro.endTime='18:00';
+              console.log("GUARDA!!");
+              console.log(registro);
+              Agenda.update(id, fecha, tipo, registro);
+              $scope.items = Agenda.list();
+            }, function() {
+              $scope.alert = 'You cancelled the dialog.';
+            });
+
         };
     }])
     .controller('BusquedaCtrl', ['$scope', '$location', function($scope, $location) {
@@ -65,3 +83,13 @@ config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThem
             $location.path('/buscar/' + $scope.consulta);
         };
     }]);
+function DialogCtrl($scope, $mdDialog, id,fecha,tipo, Agenda) {
+    $scope.registro = Agenda.get(id, fecha, tipo);
+  
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+  $scope.guardar = function() {
+    $mdDialog.hide($scope.registro);
+  };
+}

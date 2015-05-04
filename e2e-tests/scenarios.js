@@ -1,82 +1,270 @@
 'use strict';
 
 describe('index', function() {
-    //beforeEach(function() {
+
     browser.get('index.html');
-    //});
-	it('debe redirigir a /index cuando no se especifica el controlador', function() {
-	        expect(browser.getLocationAbsUrl()).toMatch("/index");
-	});
 
-    it('debe mostrar index cuando el usuario navega hasta /index', function() {
-        expect(element.all(by.css('[ng-view] h2')).first().getText()).
-        	toMatch(/Actividades destacadas/);
+    it('RF-1. Mostrar actividades destacadas', function() {
+        expect(element.all(by.repeater('registro in actividades')).count()).toBeGreaterThan(2);
     });
 
-    it('debe cargar los datos de actividades y monumentos', function() {
-            expect(element.all(by.repeater('registro in actividades')).count()).toBeGreaterThan(2);
-            expect(element.all(by.repeater('registro in monumentos')).count()).toBeGreaterThan(2);
+    it('RF-2. Mostrar monumentos destacados', function() {
+        expect(element.all(by.repeater('registro in monumentos')).count()).toBeGreaterThan(2);
     });
 
-	it('debe mostrar el detalle de la actividad', function() {
-		var accordion = element.all(by.css('[ng-view] .panel-title')).first();
-		accordion.click().then(function() {
-			expect(element.all(by.css('[ng-view] .panel-body')).first().isPresent()).toBeTruthy();
-			expect(element.all(by.css('[ng-view] .panel-body .angular-leaflet-map')).first().isPresent()).toBeTruthy();
-		}); 
+    it('RF-3. Mostrar el detalle del un registro y su localización', function() {
+        var accordion = element.all(by.css('[ng-view] .panel-title')).first();
+        accordion.click().then(function() {
+            expect(element.all(by.css('[ng-view] .panel-body')).first().isPresent()).toBeTruthy();
+            expect(element.all(by.css('[ng-view] .panel-body .angular-leaflet-map')).first().isPresent()).toBeTruthy();
+        });
 
     });
 
-    it('debe mostrar alojamientos cercanos', function() {
-        var btnAlojamiento = element.all(by.css('[ng-view] .panel-body #btnAlojamientoCercano')).first();        
+    it('RF-4. Mostrar recursos cercanos a un registro', function() {
+        var btnAlojamiento = element.all(by.css('[ng-view] .panel-body #btnAlojamientoCercano')).first();
         btnAlojamiento.click().then(function() {
-            browser.driver.sleep(2000);
+            browser.driver.sleep(1000);
             expect(by.model('markers')).toBeDefined();
         });
     });
 
-    it('debe poder agregarse el elemento a la Agenda', function() {
+    it('RF-10. Crear agenda con los recursos que se desean visitar', function() {
         var btnAddCalendar = element.all(by.css('[ng-view] .btnAddCalendar')).first();
         btnAddCalendar.click().then(function() {
             expect(browser.executeScript("sessionStorage.getItem('items');")).toBeDefined();
         });
     });
 
-	it('debe mostrar el detalle de un monumento', function() {
-       var accordion = element.all(by.css('[ng-view] #acordeon_mon .panel-title')).first();
-		accordion.click().then(function() {
-			expect(element.all(by.css('[ng-view] #acordeon_mon .panel-body')).first().isPresent()).toBeTruthy();
-			expect(element.all(by.css('[ng-view] #acordeon_mon .panel-body .angular-leaflet-map')).first().isPresent()).toBeTruthy();
-		}); 
-    });
-
 
 });
 
-describe('faceta', function() {
+describe('Actividades', function() {
     beforeEach(function() {
         browser.get('index.html#/facet/agenda');
     });
-
-    it('debe mostrar actividades y sus facetas cuando el usuario navega hasta facet/agenda', function() {
+    it('RF-7. Consulta de actividades', function() {
         expect(element.all(by.css('[ng-view] h2')).first().getText()).
-        	toMatch(/Actividades/);
+        toMatch(/Actividades/);
+        expect(element.all(by.repeater('dato in facetas')).count()).toBeGreaterThan(0);
+        expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
+    });
+    it('RF-7. Filtro de actividades', function() {
+        var btnFiltro = element.all(by.css('[ng-view] .nav button')).first();
+        btnFiltro.click().then(function() {
+            browser.driver.sleep(1000);
+            expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
+        });
+    });
+
+});
+
+describe('Alojamientos', function() {
+    beforeEach(function() {
+        browser.get('index.html#/facet/alojamiento');
+    });
+    it('RF-8. Consulta de alojamientos', function() {
+        expect(element.all(by.css('[ng-view] h2')).first().getText()).
+        toMatch(/Alojamiento/);
+        expect(element.all(by.repeater('dato in facetas')).count()).toBeGreaterThan(0);
+        expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
+    });
+    it('RF-8. Filtro de alojamientos', function() {
+        var btnFiltro = element.all(by.css('[ng-view] .nav button')).first();
+        btnFiltro.click().then(function() {
+            browser.driver.sleep(1000);
+            expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
+        });
+    });
+
+});
+
+describe('Restaurantes', function() {
+    beforeEach(function() {
+        browser.get('index.html#/facet/gastronomia');
+    });
+    it('RF-9. Consulta de restaurantes', function() {
+        expect(element.all(by.css('[ng-view] h2')).first().getText()).
+        toMatch(/Gastronomía/);
         expect(element.all(by.repeater('dato in facetas')).count()).toBeGreaterThan(0);
         expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
     });
 
+    it('RF-9. Filtro de restaurantes', function() {
+        var btnFiltro = element.all(by.css('[ng-view] .nav button')).first();
+        btnFiltro.click().then(function() {
+            browser.driver.sleep(1000);
+            expect(element.all(by.repeater('registro in resultados')).count()).toBeGreaterThan(2);
+        });
+    });
+
 });
 
-describe('sector', function() {
+describe('Infancia', function() {
     beforeEach(function() {
         browser.get('index.html#/para/infancia');
     });
 
-    it('debe mostrar infancia cuando el usuario navega hasta para/infancia', function() {
+    it('RF-6. Preparar apartados según el sector de población: infancia actividades', function() {
         expect(element.all(by.css('[ng-view] a.navbar-brand')).first().getText()).
-        	toMatch(/Infancia/);
+        toMatch(/Infancia/);
+        expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+    });
+    it('RF-6. Preparar apartados según el sector de población: infancia recursos', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnRecurso'));
+        btn.click().then(function() {
+            browser.driver.sleep(1000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+});
+
+describe('Personas Mayores', function() {
+    beforeEach(function() {
+        browser.get('index.html#/para/mayores');
     });
 
+    it('RF-6. Preparar apartados según el sector de población: personas mayores actividades', function() {
+        expect(element.all(by.css('[ng-view] a.navbar-brand')).first().getText()).
+        toMatch(/Personas Mayores/);
+        expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+    });
+    it('RF-6. Preparar apartados según el sector de población: personas mayores recursos', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnRecurso'));
+        btn.click().then(function() {
+            browser.driver.sleep(1000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+});
+describe('Jovenes', function() {
+    beforeEach(function() {
+        browser.get('index.html#/para/jovenes');
+    });
+
+    it('RF-6. Preparar apartados según el sector de población: jovenes actividades', function() {
+        expect(element.all(by.css('[ng-view] a.navbar-brand')).first().getText()).
+        toMatch(/Jóvenes/);
+        expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes recursos', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnRecurso'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes zonas marcha', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnmarcha'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes noche', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnnoche'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes tomar algo', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btntomar'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes musica en vivo', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnenvivo'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes zonas verdes', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnzonasverdes'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes de compras', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btncompras'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes de tapas', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btntapas'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
+    it('RF-6. Preparar apartados según el sector de población: jovenes ocio', function() {
+        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
+            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+            interior.click();
+            browser.driver.sleep(1000);
+        }
+        var btn = element.all(by.css('[ng-view] #btnocio'));
+        btn.click().then(function() {
+            browser.driver.sleep(2000);
+            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        });
+    });
 });
 
 describe('buscar', function() {
@@ -84,10 +272,8 @@ describe('buscar', function() {
         browser.get('index.html#/buscar/aragon');
     });
 
-    it('debe mostrar listado de coincidencias con la palabra aragon', function() {
+    it('RF-5. Permitir búsqueda completa sobre los conjuntos de datos, ejemplo consulta: aragon', function() {
         expect(element.all(by.repeater('registro in resultado')).count()).toBeGreaterThan(2);
     });
 
 });
-
-

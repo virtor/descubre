@@ -82,18 +82,17 @@ angular.module('descubre.services', [])
     .factory('Agenda', ['$filter', function($filter) {
 
         function add(registro) {
-            //uri, title, date, startTime, endTime, x, y
-            console.log('add');
             var dato = {};
             if (registro.uri) {
                 dato.uri = registro.uri.value || registro.uri;
             } else {
                 dato.uri = 'punto-' + registro.id + '-mapa-colab';
             }
+
             dato.title = registro.title.value || registro.title;
-            dato.date = $filter('getDate')(registro);
-            dato.startTime = $filter('getStartTime')(registro);
-            dato.endTime = $filter('getEndTime')(registro);
+            dato.date = $filter('date')($filter('getDate')(registro),'yyyy-MM-dd');
+            dato.startTime = $filter('date')($filter('getStartTime')(registro),'HH:mm');
+            dato.endTime = $filter('date')($filter('getEndTime')(registro),'HH:mm');
             dato.latitud = $filter('getLatitud')(registro);
             dato.longitud = $filter('geLongitud')(registro);
 
@@ -124,7 +123,6 @@ angular.module('descubre.services', [])
 
         function remove(index, fecha, tipo) {
             var items = JSON.parse(sessionStorage.getItem('items')) || {};
-            console.log('borra');
             var dato;
             if (tipo == 'dated') {
                 items.dated[fecha].splice(index, 1);
@@ -136,8 +134,8 @@ angular.module('descubre.services', [])
             }
             sessionStorage.setItem('items', JSON.stringify(items));
         }
+
         function update(index, fecha, tipo, registro) {
-            //uri, title, date, startTime, endTime, x, y
             remove(index, fecha, tipo);
             add(registro);
         }
@@ -145,6 +143,15 @@ angular.module('descubre.services', [])
             add: add,
             remove: remove,
             update: update,
+            get: function(index, fecha, tipo) {
+                var items = JSON.parse(sessionStorage.getItem('items')) || {};
+                var dato;
+                if (tipo == 'dated') {
+                    return items.dated[fecha][index];
+                } else {
+                    return items.nodated[index];
+                }
+            },
             existe: function(registro){
                 var uri = '';
                 if (registro.uri) {

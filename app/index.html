@@ -85,14 +85,14 @@
                 </div>
 
             </md-toolbar>
-            <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak style="z-index:10000">
+            <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
                 <md-toolbar class="md-hue-2">
                     <h1 class="md-toolbar-tools"><span class="glyphicon glyphicon-calendar"></span>{{::strings.nav.agenda}}</h1>
                 </md-toolbar>
                 <md-content>
                     <ul>
                         <li ng-repeat="item in items.nodated track by $index">
-                            <button class="pull-right btn btn-default btn-sm" type="button" aria-label="Editar" ng-click="updateAgenda($index,'nodated')">
+                            <button class="pull-right btn btn-default btn-sm" type="button" aria-label="Editar" ng-click="updateAgenda($event,$index,'nodated')">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </button>
                             <button class="pull-right btn btn-default btn-sm" type="button" aria-label="Borrar" ng-click="removeAgenda($index,'nodated')">
@@ -106,7 +106,7 @@
                             {{fechas[0].date | date:'EEEE dd MMMM'}}
                             <dl ng-repeat="item in fechas track by $index">
                                 <dt>{{item.startTime}} {{item.endTime}}
-                                    <button class="pull-right btn btn-default btn-sm" type="button" aria-label="Editar" ng-click="updateAgenda($index,item.date,'dated')">
+                                    <button class="pull-right btn btn-default btn-sm" type="button" aria-label="Editar" ng-click="updateAgenda($event,$index,item.date,'dated')">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </button>
                                     <button class="pull-right btn btn-default btn-sm" type="button" aria-label="Borrar" ng-click="removeAgenda($index,item.date,'dated')">
