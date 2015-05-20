@@ -17,11 +17,11 @@ exports.config = {
         jasmine.getEnv().addReporter(reporter);
     },
 
-    multiCapabilities: [{
+    multiCapabilities: [/*{
         'browserName': 'firefox',
     }, {
         'browserName': 'chrome'
-    }, {
+    }, */{
         'browserName': 'chrome',
         'browserVersion': 'mobile',
         'chromeOptions': {

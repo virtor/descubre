@@ -29,7 +29,7 @@ describe('descubre.facet module', function() {
       	expect($scope.resultados).toBeDefined();
 
     }));
-     it('debe filtrar por facetta', function() {
+     it('debe filtrar por faceta', function() {
       var $scope = {};
       var $sanitize = {};
       routeParams.categoria = 'agenda';

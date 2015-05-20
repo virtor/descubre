@@ -96,7 +96,7 @@ angular.module('descubre.services', [])
             dato.latitud = $filter('getLatitud')(registro);
             dato.longitud = $filter('geLongitud')(registro);
 
-            var items = JSON.parse(sessionStorage.getItem('items')) || {};
+            var items = JSON.parse(localStorage.getItem('items')) || {};
             if (!items.dated) {
                 items.dated = {};
             }
@@ -117,12 +117,12 @@ angular.module('descubre.services', [])
             } else {
                 items.nodated.push(dato);
             }
-            sessionStorage.setItem('items', JSON.stringify(items));
+            localStorage.setItem('items', JSON.stringify(items));
 
         }
 
         function remove(index, fecha, tipo) {
-            var items = JSON.parse(sessionStorage.getItem('items')) || {};
+            var items = JSON.parse(localStorage.getItem('items')) || {};
             var dato;
             if (tipo == 'dated') {
                 items.dated[fecha].splice(index, 1);
@@ -132,7 +132,7 @@ angular.module('descubre.services', [])
             } else {
                 items.nodated.splice(index, 1);
             }
-            sessionStorage.setItem('items', JSON.stringify(items));
+            localStorage.setItem('items', JSON.stringify(items));
         }
 
         function update(index, fecha, tipo, registro) {
@@ -144,7 +144,7 @@ angular.module('descubre.services', [])
             remove: remove,
             update: update,
             get: function(index, fecha, tipo) {
-                var items = JSON.parse(sessionStorage.getItem('items')) || {};
+                var items = JSON.parse(localStorage.getItem('items')) || {};
                 var dato;
                 if (tipo == 'dated') {
                     return items.dated[fecha][index];
@@ -159,12 +159,12 @@ angular.module('descubre.services', [])
                 } else {
                     uri = 'punto-' + registro.id + '-mapa-colab';
                 }
-                var items = sessionStorage.getItem('items') || '';
+                var items = localStorage.getItem('items') || '';
                 return items.indexOf(uri) >= 0;
             },
             list: function() {
                 console.log('LLEGA');
-                return JSON.parse(sessionStorage.getItem('items')) || [];
+                return JSON.parse(localStorage.getItem('items')) || [];
             }
         };
     }]);

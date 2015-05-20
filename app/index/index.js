@@ -27,52 +27,18 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
         $scope.progresoCarga = $scope.progresoCarga + 50;
     });
 
-/*    $scope.addCalendar = function(e){
-    alert('asa');
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    Agenda.add($scope.detalle);
-  };
-*/
-    // Query.list('SELECT distinct ?type ?uri ?title ?tenedores ?latitud ?longitud\
-    //     WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>.\
-    //     OPTIONAL {?uri rdfs:label  ?title.}\
-    //     ?uri <http://www.zaragoza.es/skos/vocab/tenedores>  ?tenedores.\
-    //     OPTIONAL {?uri geo:geometry ?geo.\
-    //     ?geo geo:lat ?latitud.\
-    //     ?geo geo:long ?longitud}.\
-    //     } ORDER BY DESC(?tenedores) \
-    //     LIMIT 20').then(function(result) {
-    //     $scope.restaurantes = result.results.bindings;
-    //     $scope.progresoCarga = $scope.progresoCarga + 34;
-    // });
-
 }])
 .controller('DetalleController', ['$scope', 'Query', 'Agenda', '$filter', function($scope, Query, Agenda, $filter) {
-  /*
-  $scope.claseParquimetro='';
-  $scope.claseRestaurante='';
-  $scope.claseAlojamiento='';
-  $scope.claseMonumento='';
-  $scope.claseRecurso='';
-  $scope.claseActo='';  
-  $scope.claseAparcabici=''; 
-  $scope.claseBizi=''; 
-  $scope.claseParadaTaxi=''; 
-  $scope.claseAparcamiento=''; 
-  $scope.claseGasolinera=''; 
-  $scope.claseMoto=''; 
-  */
+  
   $scope.parquimetrosCercanos = function(){
+    console.log('INICIO---');
      $scope.claseParquimetro='glyphicon glyphicon-refresh';
      Query.getApi('/recurso/urbanismo-infraestructuras/equipamiento/parquimetro?rows=30&fl=id,title,description,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {
         var icono = {
             iconUrl: '//www.zaragoza.es/contenidos/iconos/parquimetro_ESRO.png',
              iconSize: [22, 22]
         }
-
+        console.log($scope.detalle)
         $scope.markers = {
             main_marker: {
                 lat: Math.round10($scope.detalle.latitud.value, -4),
@@ -102,13 +68,13 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
   };
 
   $scope.restaurantesCercanos = function(){
+    
      $scope.claseRestaurante='glyphicon glyphicon-refresh';
      Query.getApi('/recurso/turismo/restaurante?rows=200&fl=id,title,tenedores,description,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {
         var icono = {
             iconUrl: '//www.zaragoza.es/contenidos/iconos/restaurante20.png',
              iconSize: [22, 22]
         }
-
         $scope.markers = {
             main_marker: {
                 lat: Math.round10($scope.detalle.latitud.value, -4),
@@ -425,7 +391,7 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
   };
   $scope.sanidadCercanos = function(){
     $scope.claseSanidad='glyphicon glyphicon-refresh';
-     Query.getApi('/recurso/urbanismo-infraestructuras/equipamiento/recurso/?q=subtemas.id==781,subtemas.id==780&rows=200&fl=id,title,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {
+     Query.getApi('/recurso/urbanismo-infraestructuras/equipamiento/recurso/?q=subtemas.id==781,subtemas.id==780,subtemas.id==740&rows=200&fl=id,title,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {
         var icono = {
             iconUrl: '//www.zaragoza.es/contenidos/iconos/sanidadYconsumo.png',
              iconSize: [22, 22]

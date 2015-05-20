@@ -125,32 +125,40 @@ var query = {
         } group by ?uri ?title \
         OFFSET {1} LIMIT 50',
     filter: {
-        evento: 'SELECT distinct ?uri ?title ?latitud ?tipo ?subEvent ?longitud ?modified ?comment ?price ?accesible ?accesibilidad ?programa ?image ?maxParticipantes ?startDate ?endDate ?startTime ?endTime ?horario ?url\
-                WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#Evento>.\
+        evento: 'PREFIX agenda: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
+                PREFIX s: <http://schema.org>\
+                PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+                SELECT distinct ?uri ?title ?latitud ?tipo ?subEvent ?longitud ?modified ?comment ?price ?accesible ?accesibilidad ?programa ?image ?maxParticipantes ?startDate ?endDate ?startTime ?endTime ?horario ?url\
+                WHERE { ?uri a agenda:Evento.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
-                OPTIONAL {?uri <http://schema.org/price>  ?price.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#accesible>  ?accesible.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#programa>  ?programa.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#tipoEntrada>  ?tipoEntrada.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#numMaximoParticipantes>  ?maxParticipantes.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#category>  ?tipo.}\
-                OPTIONAL {?uri <http://schema.org/subEvent> ?subEvent.}\
-                OPTIONAL {?subEvent <http://schema.org/startDate> ?startDate.}\
-                OPTIONAL {?subEvent <http://schema.org/endDate> ?endDate.}\
-                OPTIONAL {?subEvent <http://schema.org/startTime> ?startTime.}\
-                OPTIONAL {?subEvent <http://schema.org/endTime> ?endTime.}\
-                OPTIONAL {?subEvent <http://schema.org/openingHours> ?horario.}\
-                OPTIONAL {?uri <http://schema.org/image>  ?image.}\
-                OPTIONAL {?uri <http://schema.org/url>  ?url.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#barrerasArquitectonicas>  ?accesibilidad.}\
+                OPTIONAL {?uri s:price  ?price.}\
+                OPTIONAL {?uri agenda:accesible  ?accesible.}\
+                OPTIONAL {?uri agenda:programa  ?programa.}\
+                OPTIONAL {?uri agenda:tipoEntrada  ?tipoEntrada.}\
+                OPTIONAL {?uri agenda:numMaximoParticipantes  ?maxParticipantes.}\
+                OPTIONAL {?uri ns:category  ?tipo.}\
+                OPTIONAL {?uri s:subEvent ?subEvent.}\
+                OPTIONAL {?subEvent s:startDate ?startDate.}\
+                OPTIONAL {?subEvent s:endDate ?endDate.}\
+                OPTIONAL {?subEvent s:startTime ?startTime.}\
+                OPTIONAL {?subEvent s:endTime ?endTime.}\
+                OPTIONAL {?subEvent s:openingHours ?horario.}\
+                OPTIONAL {?uri s:image  ?image.}\
+                OPTIONAL {?uri s:url  ?url.}\
+                OPTIONAL {?uri agenda:barrerasArquitectonicas  ?accesibilidad.}\
                 OPTIONAL {?uri geo:geometry ?geo.\
                 ?geo geo:lat ?latitud.\
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        alojamiento: 'PREFIX locn: <http://www.w3.org/ns/locn#>\
+        alojamiento: 'PREFIX aloj: <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#>\
+                PREFIX s: <http://schema.org>\
+                PREFIX lugar: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
+                PREFIX zgz: <http://www.zaragoza.es/api/def/turismo/lugar#>\
+                PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+                PREFIX locn: <http://www.w3.org/ns/locn#>\
                 SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?accesibilidad ?numCamas ?numHabitaciones ?streetAdr ?addressLocality ?postCode ?email ?socioHoreca ?categoria ?logo ?photo ?url\
                 WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/alojamiento>.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
@@ -158,88 +166,103 @@ var query = {
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
                 OPTIONAL {?uri s:addressLocality  ?addressLocality.}\
                 OPTIONAL {?uri locn:postCode  ?postCode.}\
-                OPTIONAL {?uri <http://schema.org/email>  ?email.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#logo>  ?logo.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#photo>  ?photo.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#url>  ?url.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#street-adr>  ?streetAdr.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#numCamas>  ?numCamas.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#numHabitaciones>  ?numHabitaciones.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#accesibilidad>  ?accesibilidad.}\
-                OPTIONAL {?uri <http://www.zaragoza.es/api/def/turismo/lugar#socioHoreca>  ?socioHoreca.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/alojamiento#categoria> ?categoria.}\
-                OPTIONAL {?uri <http://schema.org/telephone> ?tel.}\
-                OPTIONAL {?uri <http://schema.org/faxNumber> ?fax.}\
+                OPTIONAL {?uri s:email ?email.}\
+                OPTIONAL {?uri ns:logo  ?logo.}\
+                OPTIONAL {?uri ns:photo  ?photo.}\
+                OPTIONAL {?uri ns:url  ?url.}\
+                OPTIONAL {?uri ns:street-adr  ?streetAdr.}\
+                OPTIONAL {?uri aloj:numCamas  ?numCamas.}\
+                OPTIONAL {?uri aloj:numHabitaciones  ?numHabitaciones.}\
+                OPTIONAL {?uri lugar:accesibilidad  ?accesibilidad.}\
+                OPTIONAL {?uri zgz:socioHoreca  ?socioHoreca.}\
+                OPTIONAL {?uri aloj:categoria ?categoria.}\
+                OPTIONAL {?uri s:telephone ?tel.}\
+                OPTIONAL {?uri s:faxNumber ?fax.}\
                 OPTIONAL {?uri geo:geometry ?geo.\
                 ?geo geo:lat ?latitud.\
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        restaurante: 'PREFIX locn: <http://www.w3.org/ns/locn#>\
+        restaurante: 'PREFIX tur: <http://vocab.linkeddata.es/kos/turismo/>\
+                PREFIX s: <http://schema.org>\
+                PREFIX lugar: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
+                PREFIX zgz: <http://www.zaragoza.es/api/def/turismo/lugar#>\
+                PREFIX zgzkos: <http://www.zaragoza.es/skos/vocab/>\
+                PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+                PREFIX locn: <http://www.w3.org/ns/locn#>\
                 SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?comment ?accesibilidad ?servesCuisine ?tenedores ?capacidad ?streetAdr ?addressLocality ?postCode ?email ?socioHoreca ?restauranteEnHotel ?fincaCatering ?locality ?logo ?photo ?url\
-                WHERE { ?uri a <http://vocab.linkeddata.es/kos/turismo/restaurante>.\
+                WHERE { ?uri a tur:restaurante.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
                 OPTIONAL {?uri s:addressLocality  ?addressLocality.}\
                 OPTIONAL {?uri locn:postCode  ?postCode.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#email>  ?email.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#logo>  ?logo.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#photo>  ?photo.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#url>  ?url.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#street-adr>  ?streetAdr.}\
-                OPTIONAL {?uri <http://www.zaragoza.es/skos/vocab/capacidad>  ?capacidad.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#accesibilidad>  ?accesibilidad.}\
-                OPTIONAL {?uri <http://www.zaragoza.es/skos/vocab/restauranteEnHotel>  ?restauranteEnHotel.}\
-                OPTIONAL {?uri <http://www.zaragoza.es/api/def/turismo/lugar#socioHoreca>  ?socioHoreca.}\
-                OPTIONAL {?uri <http://schema.org/servesCuisine> ?servesCuisine.}\
-                OPTIONAL {?uri <http://www.zaragoza.es/skos/vocab/fincaCatering> ?fincaCatering.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#tel> ?telin.\
-                    ?telin <http://www.w3.org/2006/vcard/ns#Tel> ?tel.\
+                OPTIONAL {?uri ns:email  ?email.}\
+                OPTIONAL {?uri ns:logo  ?logo.}\
+                OPTIONAL {?uri ns:photo  ?photo.}\
+                OPTIONAL {?uri ns:url  ?url.}\
+                OPTIONAL {?uri ns:street-adr  ?streetAdr.}\
+                OPTIONAL {?uri zgzkos:capacidad  ?capacidad.}\
+                OPTIONAL {?uri lugar:accesibilidad ?accesibilidad.}\
+                OPTIONAL {?uri zgzkos:restauranteEnHotel  ?restauranteEnHotel.}\
+                OPTIONAL {?uri zgz:socioHoreca  ?socioHoreca.}\
+                OPTIONAL {?uri s:servesCuisine ?servesCuisine.}\
+                OPTIONAL {?uri zgzkos:fincaCatering ?fincaCatering.}\
+                OPTIONAL {?uri ns:tel ?telin.\
+                    ?telin ns:Tel ?tel.\
                 }\
                 OPTIONAL {?uri geo:geometry ?geo.\
                 ?geo geo:lat ?latitud.\
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        monumento: 'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
-                WHERE { ?uri a <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#LugarInteresTuristico>.\
+        monumento: 'PREFIX tur: <http://vocab.linkeddata.es/kos/turismo/>\
+                PREFIX s: <http://schema.org>\
+                PREFIX lugar: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
+                PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?fax ?comment ?foursquare ?datacion ?uso ?datosAcceso ?estilo ?puntosInteres ?streetAdr ?horario ?price ?detalleVisita ?photo \
+                WHERE { ?uri a lugar:LugarInteresTuristico.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#photo>  ?photo.}\
-                OPTIONAL {?uri <http://schema.org/streetAddress>  ?streetAdr.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#estiloArtistico>  ?estilo.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#puntosInteres>  ?puntosInteres.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#datacion>  ?datacion.}\
-                OPTIONAL {?uri <http://schema.org/price>  ?price.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#uso>  ?uso.}\
-                OPTIONAL {?uri <http://schema.org/openingHours>  ?horario.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#foursquare>  ?foursquare.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#datosAcceso> ?datosAcceso.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#detalleVisita> ?detalleVisita.}\
-                OPTIONAL {?uri <http://schema.org/telephone> ?tel.}\
-                OPTIONAL {?uri <http://schema.org/faxNumber> ?fax.}\
+                OPTIONAL {?uri ns:photo  ?photo.}\
+                OPTIONAL {?uri s:streetAddress  ?streetAdr.}\
+                OPTIONAL {?uri lugar:estiloArtistico  ?estilo.}\
+                OPTIONAL {?uri lugar:puntosInteres  ?puntosInteres.}\
+                OPTIONAL {?uri lugar:datacion  ?datacion.}\
+                OPTIONAL {?uri s:price  ?price.}\
+                OPTIONAL {?uri lugar:uso  ?uso.}\
+                OPTIONAL {?uri s:openingHours  ?horario.}\
+                OPTIONAL {?uri lugar:foursquare  ?foursquare.}\
+                OPTIONAL {?uri lugar:datosAcceso ?datosAcceso.}\
+                OPTIONAL {?uri lugar:detalleVisita ?detalleVisita.}\
+                OPTIONAL {?uri s:telephone ?tel.}\
+                OPTIONAL {?uri s:faxNumber ?fax.}\
                 OPTIONAL {?uri geo:geometry ?geo.\
                 ?geo geo:lat ?latitud.\
                 ?geo geo:long ?longitud}.\
                 ?uri dcterms:identifier "{0}".\
                 }',
-        recurso: 'SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?email ?url ?comment ?servicios ?accesibilidad ?streetAdr ?horario ?price  \
-                WHERE { ?uri a <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/equipamiento>.\
+        recurso: 'PREFIX urb: <http://vocab.linkeddata.es/kos/urbanismo-infraestructuras/>\
+                PREFIX s: <http://schema.org>\
+                PREFIX lugar: <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#>\
+                PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
+                PREFIX gr: <http://purl.org/goodrelations/v1#>\
+                SELECT distinct ?uri ?title ?latitud ?longitud ?modified ?tel ?email ?url ?comment ?servicios ?accesibilidad ?streetAdr ?horario ?price  \
+                WHERE { ?uri a urb:equipamiento.\
                 OPTIONAL {?uri rdfs:label  ?title.}\
                 OPTIONAL {?uri dcterms:modified  ?modified.}\
                 OPTIONAL {?uri rdfs:comment  ?comment.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#servicios> ?servicios.}\
-                OPTIONAL {?uri <http://schema.org/streetAddress>  ?streetAdr.}\
-                OPTIONAL {?uri <http://purl.org/goodrelations/v1#hasOpeningHoursSpecification>  ?horario.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#tel> ?telin.\
-                    ?telin <http://www.w3.org/2006/vcard/ns#Tel> ?tel.\
+                OPTIONAL {?uri lugar:servicios ?servicios.}\
+                OPTIONAL {?uri s:streetAddress  ?streetAdr.}\
+                OPTIONAL {?uri gr:hasOpeningHoursSpecification  ?horario.}\
+                OPTIONAL {?uri ns:tel ?telin.\
+                    ?telin ns:Tel ?tel.\
                 }\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#email> ?email.}\
-                OPTIONAL {?uri <http://www.w3.org/2006/vcard/ns#url> ?url.}\
-                OPTIONAL {?uri <http://schema.org/price> ?price.}\
-                OPTIONAL {?uri <http://vocab.linkeddata.es/datosabiertos/def/turismo/lugar#accesibilidad> ?accesibilidad.}\
+                OPTIONAL {?uri ns:email ?email.}\
+                OPTIONAL {?uri ns:url ?url.}\
+                OPTIONAL {?uri s:price ?price.}\
+                OPTIONAL {?uri lugar:accesibilidad ?accesibilidad.}\
                 OPTIONAL {?uri geo:geometry ?geo.\
                 ?geo geo:lat ?latitud.\
                 ?geo geo:long ?longitud}.\

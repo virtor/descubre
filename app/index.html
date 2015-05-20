@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{::strings.nav.title}}</title>
+    <title>Descubre la ciudad de Zaragoza</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
@@ -23,7 +23,23 @@
 </head>
 
 <body layout="horizontal">
-    <md-sidenav layout="column" style="overflow: hidden; display: flex;" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-sm')" ng-cloak>
+    <noscript>
+        <div style="display:block;clear:both">
+        <h1>Descubre la ciudad de Zaragoza</h1>
+        <p>Para el correcto funcionamiento del servicio debe acceder al mismo con un navegador que tenga Javascript habilidado.</p>
+        <p>El servicio proporciona un acceso unificado a los siguientes recursos disponibles en el sitio web del ayuntamiento de zaragoza</p>
+        <ul>
+        <li><a href="http://www.zaragoza.es/ciudad/actividades/">Agenda de actividades</a></li>
+        <li><a href="http://www.zaragoza.es/ciudad/actividades/juvenil/">Agenda de actividades para jóvenes</a></li>
+        <li><a href="http://www.zaragoza.es/ciudad/centros/buscar_Centro">Equipamientos de la ciudad</a></li>
+        <li><a href="http://www.zaragoza.es/ciudad/turismo/es/que-visitar/sitios-interes/monumentos.htm">Monumentos</a></li>
+        <li><a href="http://www.zaragoza.es/ciudad/turismo/es/organiza-viaje/alojamientos.htm">Alojamientos</a></li>
+        <li><a href="http://www.zaragoza.es/ciudad/turismo/es/organiza-viaje/gastronomia.htm">Restaurantes</a></li>
+        </ul>
+    </div>
+    </noscript>
+    
+    <md-sidenav layout="column" style="overflow: hidden; display: flex;" class="hidden md-sidenav-left md-whiteframe-z2" md-component-id="left" id="menu" md-is-locked-open="$media('gt-sm')" ng-cloak>
 
         <md-toolbar class="md-hue-2" style="min-height: 64px; max-height:64px;" layout="column">
             <h1 class="md-toolbar-tools" flex layout="column">
@@ -63,7 +79,7 @@
         </md-content>
     </md-sidenav>
 
-    <div layout="column" layout-fill tabIndex="-1" role="main" ng-cloak>
+    <div layout="column" class="hidden" layout-fill tabIndex="-1" id="maincontenido" role="main" ng-cloak>
         <div ng-controller="MenuCtrl as nav">
             <md-toolbar layout="column" class="md-hue-2">
                 <div class="md-toolbar-tools" flex layout="column">
@@ -127,7 +143,7 @@
         </div>
         <md-content ng-view md-scroll-y flex class="md-padding" id="contenedor"></md-content>
     </div>
-
+    
 
     <!-- build:js({.tmp,app}) scripts/external.js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>

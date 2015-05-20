@@ -33,6 +33,10 @@ config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThem
         });
 
     }]).controller('MenuCtrl', ['$scope', '$mdSidenav','$mdDialog', '$location', 'Agenda', function($scope, $mdSidenav, $mdDialog, $location, Agenda) {
+        
+        
+        $("#menu").toggleClass('hidden visible');
+        $("#maincontenido").toggleClass('hidden visible');
 
         $scope.openMenu = function() {
             $mdSidenav('left').open();

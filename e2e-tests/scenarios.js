@@ -111,16 +111,20 @@ describe('Infancia', function() {
         expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
     });
     it('RF-6. Preparar apartados según el sector de población: infancia recursos', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnRecurso'));
-        btn.click().then(function() {
-            browser.driver.sleep(1000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnRecurso'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+
     });
 });
 
@@ -135,15 +139,17 @@ describe('Personas Mayores', function() {
         expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
     });
     it('RF-6. Preparar apartados según el sector de población: personas mayores recursos', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnRecurso'));
-        btn.click().then(function() {
-            browser.driver.sleep(1000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnRecurso'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
     });
 });
@@ -158,112 +164,138 @@ describe('Jovenes', function() {
         expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes recursos', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnRecurso'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnRecurso'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes zonas marcha', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnmarcha'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnmarcha'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes noche', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnnoche'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnnoche'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes tomar algo', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btntomar'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btntomar'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes musica en vivo', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnenvivo'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnenvivo'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+        
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes zonas verdes', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnzonasverdes'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnzonasverdes'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes de compras', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btncompras'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btncompras'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+        
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes de tapas', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btntapas'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btntapas'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+        
     });
     it('RF-6. Preparar apartados según el sector de población: jovenes ocio', function() {
-        if (element.all(by.css('[ng-view] #nav_interior')).isDisplayed()) {
-            var interior = element.all(by.css('[ng-view] #btnnav_interior'));
-            interior.click();
-            browser.driver.sleep(1000);
-        }
-        var btn = element.all(by.css('[ng-view] #btnocio'));
-        btn.click().then(function() {
-            browser.driver.sleep(2000);
-            expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+        element.all(by.css('[ng-view] #btnnav_interior')).isDisplayed().then(function (isVisible) {
+            if (isVisible[0]) {
+                var interior = element.all(by.css('[ng-view] #btnnav_interior'));
+                 interior.click();
+                 browser.driver.sleep(1000);
+            } 
+            var btn = element.all(by.css('[ng-view] #btnocio'));
+            btn.click().then(function() {
+                browser.driver.sleep(1000);
+                expect(element.all(by.repeater('registro in equipamientos')).count()).toBeGreaterThan(2);
+            });
         });
+        
     });
 });
 
