@@ -39,12 +39,12 @@
     </div>
     </noscript>
     
-    <md-sidenav layout="column" style="overflow: hidden; display: flex;" class="hidden md-sidenav-left md-whiteframe-z2" md-component-id="left" id="menu" md-is-locked-open="$media('gt-sm')" ng-cloak>
+    <md-sidenav layout="column" style="overflow: hidden; display: flex;" class="hidden md-sidenav-left md-whiteframe-z2" md-component-id="left" id="menu" md-is-locked-open="$mdMedia('gt-sm')" ng-cloak>
 
         <md-toolbar class="md-hue-2" style="min-height: 64px; max-height:64px;" layout="column">
             <h1 class="md-toolbar-tools" flex layout="column">
             <a href="#index" layout="row" flex>
-                <div flex style="line-height:40px; text-indent: 15px;"><img src="img/logo.png"/ alt="{{::strings.nav.short_title}}"></div>
+                <div flex style="line-height:40px; text-indent: 15px;"><img src="img/logo.png" alt="{{::strings.nav.short_title}}"/></div>
             </a>
             </h1>
         </md-toolbar>
@@ -85,7 +85,7 @@
                 <div class="md-toolbar-tools" flex layout="column">
                     <div flex="80" ng-click="openMenu()">
                         <button class="menu-icon" hide-gt-sm aria-label="Toggle Menu" style="position: relative; top: .25em;">
-                            <md-icon icon="https://material.angularjs.org/img/icons/ic_menu_24px.svg" style=""></md-icon>
+                            <md-icon icon="img/ic_menu_24px.svg" style=""></md-icon>
                         </button>
                         <span class="menu-separator-icon">
                         {{::strings.nav.title}} <small>v<span app-version></span>

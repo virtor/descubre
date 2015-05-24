@@ -12,94 +12,7 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
 
-    // typescript: {
-    //   base: {
-    //     src: ['<%= myApp.app %>/js/{,*/}*.ts'],
-    //     options: {
-    //       target: 'es5',
-    //       sourceMap: true
-    //     }
-    //   },
-    //   test: {
-    //     src: ['test/unit/{,*/}*.ts'],
-    //     options: {
-    //       target: 'es5',
-    //       sourceMap: true
-    //     }
-    //   }
-    // },
-    //
-    // watch: {
-    //   ts: {
-    //     files: ['<%= myApp.app %>/js/{,*/}*.ts'],
-    //     tasks: ['typescript']
-    //   },
-    //   tsTest: {
-    //     files: ['test/unit/{,*/}*.ts'],
-    //     tasks: ['typescript:test']
-    //   },
-    //   js: {
-    //     files: ['<%= myApp.app %>/js/{,*/}*.js'],
-    //     tasks: ['newer:jshint:all'],
-    //     options: {
-    //       livereload: true
-    //     }
-    //   },
-    //   jsTest: {
-    //     files: ['test/unit/{,*/}*.js'],
-    //     tasks: ['newer:jshint:test', 'karma']
-    //   },
-    //   styles: {
-    //     files: ['<%= myApp.app %>/css/{,*/}*.css'],
-    //     tasks: ['newer:copy:styles', 'autoprefixer']
-    //   },
-    //   gruntfile: {
-    //     files: ['Gruntfile.js']
-    //   },
-    //   livereload: {
-    //     options: {
-    //       livereload: '<%= connect.options.livereload %>'
-    //     },
-    //     files: [
-    //       '<%= myApp.app %>/{,*/}*.html',
-    //       '.tmp/css/{,*/}*.css',
-    //       '<%= myApp.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-    //     ]
-    //   }
-    // },
-    //
-    // connect: {
-    //   options: {
-    //     port: 9000,
-    //     hostname: 'localhost',
-    //     livereload: 35729
-    //   },
-    //   livereload: {
-    //     options: {
-    //       open: true,
-    //       base: [
-    //         '.tmp',
-    //         '<%= myApp.app %>'
-    //       ]
-    //     }
-    //   },
-    //   test: {
-    //     options: {
-    //       port: 9001,
-    //       base: [
-    //         '.tmp',
-    //         'test',
-    //         '<%= myApp.app %>'
-    //       ]
-    //     }
-    //   },
-    //   dist: {
-    //     options: {
-    //       base: '<%= myApp.dist %>'
-    //     }
-    //   }
-    // },
-
+   
     jshint: {
       options: {
         jshintrc: '.jshintrc',
@@ -321,22 +234,6 @@ module.exports = function (grunt) {
       }
     }
   });
-
-  // grunt.registerTask('serve', function (target) {
-  //   if (target === 'dist') {
-  //     return grunt.task.run(['build', 'connect:dist:keepalive']);
-  //   }
-
-  //   grunt.task.run([
-  //     'clean:server',
-  //     'bower-install',
-  //     'concurrent:server',
-  //     'autoprefixer',
-  //     'connect:livereload',
-  //     'replace:development',
-  //     'watch'
-  //   ]);
-  // });
 
   grunt.registerTask('server', function () {
     grunt.log.warn(

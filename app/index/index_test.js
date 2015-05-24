@@ -14,15 +14,6 @@ describe('descubre.index module', function() {
         $rootScope.strings = strings.es;
         $rootScope.query = query;
         httpBackend = $httpBackend;
-
-        // query = {
-        //   getApi: function () {
-        //   var deferred = $q.defer();
-        //   deferred.resolve('foo');
-        //   return deferred.promise;
-        // }
-      // };
-
     }));
 
     it('Tiene que cargar datos de actividades', inject(function($controller) {

@@ -21,12 +21,8 @@ angular.module('descubre', [
 }).
 config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThemingProvider) {
         $mdThemingProvider.theme('default')
-            .primaryColor('red')
-            .accentColor('green');
-        console.log($mdThemingProvider.theme('default'));
-        // $mdThemingProvider.theme('default')
-        //   .primaryPalette('pink')
-        //   .accentPalette('orange');
+            .primaryPalette('red')
+            .accentPalette('green');
 
         $routeProvider.otherwise({
             redirectTo: '/index'
@@ -66,14 +62,6 @@ config(['$routeProvider', '$mdThemingProvider', function($routeProvider, $mdThem
               }
             })
             .then(function(registro) {
-              // var registro = {};
-              // registro.uri = 'http://aasdasd';
-              // registro.title='titulo';
-              // registro.date='2015-02-25';
-              // registro.startTime='16:00';
-              // registro.endTime='18:00';
-              console.log("GUARDA!!");
-              console.log(registro);
               Agenda.update(id, fecha, tipo, registro);
               $scope.items = Agenda.list();
             }, function() {

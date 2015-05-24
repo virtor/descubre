@@ -1,6 +1,6 @@
 var HtmlReporter = require('protractor-html-screenshot-reporter');
 var reporter = new HtmlReporter({
-    baseDirectory: './e2e-results', // a location to store screen shots.
+    baseDirectory: './e2e-results',
     docTitle: 'Descubre Zaragoza e2e',
     docName: 'integration-report.html'
 });
@@ -12,16 +12,15 @@ exports.config = {
         '*.js'
     ],
 
-
     onPrepare: function() {
         jasmine.getEnv().addReporter(reporter);
     },
 
-    multiCapabilities: [/*{
+    multiCapabilities: [{
         'browserName': 'firefox',
     }, {
         'browserName': 'chrome'
-    }, */{
+    }, {
         'browserName': 'chrome',
         'browserVersion': 'mobile',
         'chromeOptions': {

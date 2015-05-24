@@ -44,5 +44,19 @@ var scope, ctrl, routeParams;
 	  expect(ctrl).toBeDefined();
 	}));
 
+
+	it('debe mostrar los resultados', inject(function($controller) {
+      var $scope = {};
+      var $sanitize = {};
+      routeParams.idSector = 'mayores';
+      ctrl = $controller('SectorCtrl', {
+        $scope: $scope,
+        $routeParams: routeParams,
+        $sanitize : $sanitize
+      });
+      $scope.mostrar('resource');
+      expect($scope.equipamientos.length).toBe(0);
+    }));
+
   });
 });
