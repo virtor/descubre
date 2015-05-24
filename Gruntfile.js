@@ -75,7 +75,7 @@ module.exports = function (grunt) {
           src: [
             '<%= myApp.dist %>/js/{,*/}*.js',
             '<%= myApp.dist %>/css/{,*/}*.css',
-            '<%= myApp.dist %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+            '<%= myApp.dist %>/img/{,*/}*.{png,jpg,jpeg,gif,webp}',
             '<%= myApp.dist %>/css/fonts/*'
           ]
         }
