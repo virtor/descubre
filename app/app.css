@@ -12,4 +12,6 @@
 }
 #contenedor{margin-top:2em;}
 
+@media (min-width: 600px) {
 [layout-fill]{width:76%\9 !important;}
+}
