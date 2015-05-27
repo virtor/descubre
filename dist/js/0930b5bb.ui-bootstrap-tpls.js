@@ -3913,7 +3913,7 @@ angular.module("template/accordion/accordion-group.html", []).run(["$templateCac
     "  <div class=\"panel-heading\">\n" +
     "    <h4 class=\"panel-title\">\n" +
     "   <button ng-click=\"addCalendar()\" ng-disabled=\"enAgenda()\" class=\"btn btn-primary pull-right btnAddCalendar\" aria-label=\"' + $rootScope.strings.detail.addAgenda + '\">" + 
-    "     <span class=\"glyphicon glyphicon-calendar\"></span>" +
+    "     <span class=\"glyphicon glyphicon-star\"></span>" +
     "   </button>"+
     "      <a href class=\"accordion-toggle\" ng-click=\"toggleOpen()\" accordion-transclude=\"heading\"><span ng-class=\"{'text-muted': isDisabled}\">{{heading}}</span></a>\n" +
     "    </h4>\n" +

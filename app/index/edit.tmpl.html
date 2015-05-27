@@ -6,21 +6,19 @@
                 <label>Nombre</label>
                 <input ng-model="registro.title">
             </md-input-container>
-        </div>
-        <div layout="column">
             <md-input-container md-no-float layout="column">
-                <label>Fecha</label>
-                <input ng-model="registro.date" type="text" placeholder="yyyy-mm-dd">
+                <label>Fecha (yyyy-mm-dd)</label>
+                <input ng-model="registro.date" type="text">
+            </md-input-container>
+           <md-input-container>
+                <label>Hora Inicio (hh:mm)</label>
+                <input ng-model="registro.startTime" type="text">
+            </md-input-container>
+            <md-input-container>
+                <label>Hora Final (hh:mm)</label>
+                <input ng-model="registro.endTime" type="text">
             </md-input-container>
         </div>
-       <md-input-container md-no-float>
-            <label>Inicio</label>
-            <input ng-model="registro.startTime" type="text" placeholder="hh:mm">
-        </md-input-container>
-        <md-input-container md-no-float>
-            <label>Final</label>
-            <input ng-model="registro.endTime" type="text" placeholder="hh:mm">
-        </md-input-container>
     </md-dialog-content>
     <div class="md-actions" layout="row">
         <span flex></span>

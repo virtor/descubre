@@ -10,8 +10,8 @@ strings.es = {
         gastronomy: 'Gastronomía',
         accommodation: 'Alojamiento',
         events: 'Actividades',
-        resources: 'Recursos',
-        agenda: 'Agenda',
+        resources: 'Equipamientos',
+        agenda: ' Favoritos',
         search: 'Buscar'
     },
     index: {
@@ -76,7 +76,7 @@ strings.es = {
         gastronomy: 'Restaurantes',
         accommodation: 'Alojamientos',
         health: 'Sanidad',
-        resources: 'Recursos',
+        resources: 'Equipamientos',
         parking_bike: 'Aparcabicis',
         bizi: 'Bizi',
         taxi: 'Taxis',
@@ -324,19 +324,18 @@ var query = {
                 OPTIONAL {?uri skos:broader/skos:prefLabel  ?tema.}\
                 OPTIONAL {?uri ns:category/skos:prefLabel  ?subtema.}\
                 bind (CONCAT(?tema, " ", ?subtema) AS ?tipo).\
+                ?uri acto:diasParaTerminar ?diasParaTerminarstr.\
                 OPTIONAL {?uri geo:geometry ?geo. \
                     ?geo geo:lat ?latitud. \
                     ?geo geo:long ?longitud.} \
                 bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
-                bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
-                bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
-                bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
-                filter(?diff >= 0) . \
+                bind (xsd:int(?diasParaTerminarstr) as ?diasParaTerminar) \
+                filter(?diasParaTerminar >= 0) . \
                 filter(!strstarts(str(?tema), "Cursos") ).\
                 {0} \
             }\
-            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?startFixed ?diff \
-            order by asc(?startFixed) asc(?diff)',
+            group by ?diasParaTerminar ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo \
+            order by asc(?diasParaTerminar)',
 
             facet: 'PREFIX acto: <http://vocab.linkeddata.es/datosabiertos/def/cultura-ocio/agenda#>\
             PREFIX ns: <http://www.w3.org/2006/vcard/ns#>\
@@ -411,19 +410,18 @@ var query = {
                 OPTIONAL {?uri skos:broader/skos:prefLabel  ?tema.}\
                 OPTIONAL {?uri ns:category/skos:prefLabel  ?subtema.}\
                 bind (CONCAT(?tema, " ", ?subtema) AS ?tipo).\
+                ?uri acto:diasParaTerminar ?diasParaTerminarstr.\
                 OPTIONAL {?uri geo:geometry ?geo. \
                     ?geo geo:lat ?latitud. \
                     ?geo geo:long ?longitud.} \
                 bind (coalesce(xsd:date(?startDate), now()) as ?startAsDate) \
-                bind(if(?startAsDate < now(), now(), ?startAsDate) AS ?startFixed) \
-                bind (coalesce(xsd:date(?endDate), now()) as ?endFixed) \
-                bind(bif:dateDiff(\'day\',?startFixed,?endFixed) as ?diff) \
-                filter(?diff >= 0) . \
+                bind (xsd:int(?diasParaTerminarstr) as ?diasParaTerminar) \
+                filter(?diasParaTerminar >= 0) . \
                 filter(!strstarts(str(?tema), "Cursos") ).\
                 ?uri s:typicalAgeRange <http://www.zaragoza.es/api/recurso/cultura-ocio/poblacion-destinataria/evento-zaragoza/{0}> \
             }\
-            group by ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo ?startFixed ?diff \
-            order by asc(?startFixed) asc(?diff)',
+            group by ?diasParaTerminar ?uri ?title ?startDate ?endDate ?startTime ?endTime ?horario ?tipo \
+            order by asc(?diasParaTerminar)',
         resources: 'SELECT ?uri ?title ?tipo min(?latitud) as ?latitud min(?longitud) as ?longitud\
             {\
                 SELECT DISTINCT ?uri ?title (group_concat(distinct ?tipo;separator=",")) as ?tipo ?latitud ?longitud\

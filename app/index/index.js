@@ -31,14 +31,12 @@ angular.module('descubre.index', ['ngRoute', 'descubre.services', 'filtros','ngM
 .controller('DetalleController', ['$scope', 'Query', 'Agenda', '$filter', function($scope, Query, Agenda, $filter) {
   
   $scope.parquimetrosCercanos = function(){
-    console.log('INICIO---');
      $scope.claseParquimetro='glyphicon glyphicon-refresh';
      Query.getApi('/recurso/urbanismo-infraestructuras/equipamiento/parquimetro?rows=30&fl=id,title,description,geometry&srsname=wgs84&point=' + $scope.detalle.longitud.value + '%2C' + $scope.detalle.latitud.value + '&distance=1000').then(function(resultado) {
         var icono = {
             iconUrl: '//www.zaragoza.es/contenidos/iconos/parquimetro_ESRO.png',
              iconSize: [22, 22]
         }
-        console.log($scope.detalle)
         $scope.markers = {
             main_marker: {
                 lat: Math.round10($scope.detalle.latitud.value, -4),
